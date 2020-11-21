@@ -30,7 +30,8 @@ export class OrdersController {
     // For users it should only return their orders, for admins (dashboard it should return all orders)
 
     this.eventEmitter.emit('location.update', {
-      name: 'test',
+      x: 5,
+      y: 7,
     });
 
     return 'test';

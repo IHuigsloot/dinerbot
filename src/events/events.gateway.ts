@@ -8,14 +8,9 @@ export class EventsGateway {
   server: Server;
 
   @OnEvent('location.update')
-  handleLocationUpdateEvent() {
-    const obj = {
-      x: 5,
-      y: 6,
-    };
-
+  handleLocationUpdateEvent(payload) {
     this.server.clients.forEach((client) => {
-      client.send(JSON.stringify(obj));
+      client.send(JSON.stringify(payload));
     });
   }
 }

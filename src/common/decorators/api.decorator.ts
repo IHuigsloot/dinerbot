@@ -10,7 +10,7 @@ export const Api = (tag: string) => {
     }),
     ApiTags(tag || 'Default'),
     ApiHeader({
-      name: 'X-USER',
+      name: 'user',
       description: 'email from the user who sends the request',
       required: true,
     }),
