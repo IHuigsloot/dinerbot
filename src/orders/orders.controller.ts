@@ -6,11 +6,17 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Api } from 'src/common/decorators/api.decorator';
 import { OrdersService } from './orders.service';
 
+@Api('orders')
 @Controller('orders')
 export class OrdersController {
-  constructor(private readonly orderService: OrdersService) {}
+  constructor(
+    private readonly orderService: OrdersService,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
   @Post()
   create() {
@@ -22,6 +28,13 @@ export class OrdersController {
   findAll() {
     // Todo: Should return all orders (active & history)
     // For users it should only return their orders, for admins (dashboard it should return all orders)
+
+    this.eventEmitter.emit('location.update', {
+      name: 'test',
+    });
+
+    return 'test';
+
     throw new HttpException('Not yet implemented', HttpStatus.NOT_IMPLEMENTED);
   }
 
