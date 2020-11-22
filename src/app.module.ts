@@ -10,9 +10,15 @@ import { OrdersModule } from './orders/orders.module';
 import { UserMiddleware } from './common/middlewares/user.middleware';
 import { EventsModule } from './events/events.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [OrdersModule, EventsModule, EventEmitterModule.forRoot()],
+  imports: [
+    OrdersModule,
+    EventsModule,
+    EventEmitterModule.forRoot(),
+    MongooseModule.forRoot('mongodb://localhost/nest'),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
