@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { WsAdapter } from '@nestjs/platform-ws';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import * as swStats from 'swagger-stats';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,6 +16,12 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   app.useWebSocketAdapter(new WsAdapter(app));
+
+  app.use(
+    swStats.getMiddleware({
+      swaggerSpec: document,
+    }),
+  );
 
   await app.listen(3000);
 }
