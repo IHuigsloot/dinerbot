@@ -5,7 +5,9 @@ Vue.use(VueRouter);
 
 const routerOptions = [
   { path: "/", component: "Home" },
-  { path: "/restaurants", component: "Restaurants" },
+  { path: "/restaurants", component: "restaurants/Index" },
+  { path: "/restaurants/new", component: "restaurants/View" },
+  { path: "/restaurants/:id", component: "restaurants/View" },
   { path: "/robots", component: "Robots" }
 ];
 

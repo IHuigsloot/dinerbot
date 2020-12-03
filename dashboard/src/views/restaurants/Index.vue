@@ -19,7 +19,7 @@
       </v-col>
       <v-col align-self="center" cols="3">
         <v-row justify="end" :dense="true">
-          <v-btn color="primary"> Nieuw restaurant </v-btn>
+          <v-btn color="primary" to="new" append>Nieuw restaurant</v-btn>
         </v-row>
       </v-col>
     </v-row>
@@ -27,7 +27,7 @@
       <v-col cols="12">
         <v-card>
           <template v-for="i in restaurants">
-            <v-list-item class="py-4 px-8" :key="i" to="/">
+            <v-list-item class="py-4 px-8" :key="i" :to="'' + i" append>
               <v-list-item-avatar size="80" rounded="rounded">
                 <v-img
                   src="https://media-cdn.tripadvisor.com/media/photo-s/09/5c/46/b0/domino-s-pizza-milnerton.jpg"
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { debounce } from "../helpers";
+import { debounce } from "@/helpers";
 
 export default {
   data: function() {
@@ -90,7 +90,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .v-list-item:hover {
   .v-icon {
     transform: translateX(10px);
