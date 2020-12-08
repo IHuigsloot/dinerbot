@@ -2,7 +2,7 @@ import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'ws';
 import { OnEvent } from '@nestjs/event-emitter';
 
-@WebSocketGateway(8080)
+@WebSocketGateway(3030)
 export class EventsGateway {
   @WebSocketServer()
   server: Server;

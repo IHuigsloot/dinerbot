@@ -2,15 +2,23 @@
   <div class="text-center">
     <v-dialog v-model="dialog" width="500">
       <template v-slot:activator="{ on, attrs }">
-        <v-img v-bind="attrs" v-on="on" :src="image" class="rounded"></v-img>
+        <v-img
+          v-bind="attrs"
+          v-on="on"
+          :src="image"
+          class="rounded"
+          max-height="450"
+          max-width="450"
+        ></v-img>
       </template>
 
       <v-card>
-        <v-card-title> Afbeeldingen uploaden </v-card-title>
+        <v-card-title> Afbeeldingen instellen </v-card-title>
 
         <v-card-text v-if="!isUploading">
           <v-img :src="this.image" class="rounded"></v-img>
           <v-btn
+            v-if="!disabled"
             @click="$refs.file.click()"
             class="mt-2 mx-auto"
             color="primary"
@@ -20,7 +28,7 @@
               ref="file"
               @change="uploadImage($event)"
               accept="image/*"
-            />Uploaden
+            />Nieuwe afbeelding
           </v-btn>
         </v-card-text>
 
@@ -30,16 +38,14 @@
             class="cropper"
             :src="previewImage"
             :stencil-props="{
-              aspectRatio: 10 / 10
+              aspectRatio: 10 / 10,
             }"
           />
           <v-row align="center" justify="space-around" class="mt-2">
             <v-btn @click="isUploading = false" color="primary">
-              Annuleren
+              Oude afbeelding behouden
             </v-btn>
-            <v-btn @click="isUploading = false" color="success">
-              Opslaan
-            </v-btn>
+            <v-btn @click="setImage()" color="success"> Opslaan </v-btn>
           </v-row>
         </v-card-text>
 
@@ -59,13 +65,16 @@ import { Cropper } from "vue-advanced-cropper";
 
 export default {
   components: { Cropper },
+  props: [
+    'image',
+    'disabled'
+  ],
+
   data() {
     return {
       dialog: false,
-      image:
-        "https://media-cdn.tripadvisor.com/media/photo-s/09/5c/46/b0/domino-s-pizza-milnerton.jpg",
       previewImage: null,
-      isUploading: false
+      isUploading: false,
     };
   },
   methods: {
@@ -74,13 +83,19 @@ export default {
       const input = event.target;
       if (input.files && input.files[0]) {
         const reader = new FileReader();
-        reader.onload = e => {
+        reader.onload = (e) => {
           this.previewImage = e.target.result;
         };
         reader.readAsDataURL(input.files[0]);
       }
-    }
-  }
+    },
+    setImage() {
+      const { canvas } = this.$refs.cropper.getResult();
+      const image = canvas.toDataURL();
+      this.$emit('photo-change', image);
+      this.isUploading = false;
+    },
+  },
 };
 </script>
 

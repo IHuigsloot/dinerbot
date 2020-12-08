@@ -9,7 +9,7 @@
           <v-btn color="primary" @click="isEditing = true">Bewerken</v-btn>
         </v-row>
         <v-row justify="end" v-else>
-          <v-btn color="warning" @click="cancelEdit" v-if="!isNew"
+          <v-btn color="warning" @click="cancelEdit" v-if="!!restaurantId"
             >Annuleren</v-btn
           >
           <v-btn color="success" @click="save" class="ml-2">Opslaan</v-btn>
@@ -55,7 +55,11 @@
               </v-col>
               <v-col cols="1"></v-col>
               <v-col cols="3">
-                <ImageUpload />
+                <ImageUpload
+                  :image="image"
+                  :disabled="!isEditing"
+                  v-on:photo-change="changeImage($event)"
+                />
               </v-col>
             </v-row>
           </v-list-item>
@@ -67,6 +71,8 @@
 
 <script>
 import ImageUpload from "@/components/ImageUpload";
+import { dataURLtoBlob } from "@/helpers";
+import axios from "axios";
 
 export default {
   components: {
@@ -76,9 +82,12 @@ export default {
   data() {
     return {
       valid: true,
-      isNew: false,
+      restaurantId: null,
       isEditing: false,
       name: "",
+      image:
+        "https://media-cdn.tripadvisor.com/media/photo-s/09/5c/46/b0/domino-s-pizza-milnerton.jpg",
+      isImageChanged: false,
       tags: [],
       tagsSearch: "",
       nameRules: [(v) => !!v || "Naam is verplicht"],
@@ -107,29 +116,65 @@ export default {
 
     fetchData() {
       const restaurantId = this.$route.params.id;
+      this.restaurantId = restaurantId;
       if (!restaurantId) {
-        this.isNew = true;
         this.isEditing = true;
         return;
       }
-      console.log("fetching data for ID: " + restaurantId);
+      axios
+        .get("http://localhost:3000/restaurants/" + restaurantId)
+        .then((res) => {
+          const data = res.data;
+          this.name = data.name;
+          this.tags = data.tags;
+        });
     },
 
     save() {
       this.$refs.form.validate();
       setTimeout(() => {
         const { name, tags, valid } = this;
-  
-        console.log({ name, tags });
-        if (valid) {
-          console.log("sending request");
+
+
+        if (!valid) {
+          return;
         }
-      }, 1)
+
+        const body = new FormData();
+        body.append('name', name);
+        body.append('tags', tags);
+
+        if (this.isImageChanged) {
+          const blob = dataURLtoBlob(this.image);
+          body.append('image', blob);
+        }
+
+        if (this.restaurantId) {
+          console.log("send update request");
+        } else {
+          axios
+            .post("http://localhost:3000/restaurants/", body, {
+              headers: {'Content-Type': 'multipart/form-data' }
+            })
+            .then((res) => {
+              this.isEditing = false;
+              const id = res.data._id;
+              this.$router.push(id);
+            });
+        }
+      }, 1);
     },
 
     cancelEdit() {
       this.$refs.form.resetValidation();
       this.isEditing = false;
+      this.fetchData();
+      this.isImageChanged = false;
+    },
+
+    changeImage(image) {
+      this.image = image;
+      this.isImageChanged = true;
     },
   },
 };
