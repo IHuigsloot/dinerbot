@@ -23,4 +23,20 @@ export class RestaurantsService {
   async findOne(id: string): Promise<Restaurant> {
     return this.restaurantModel.findById(id).exec();
   }
+
+  async updateOne(
+    id: string,
+    restaurantDto: CreateRestaurantDto,
+  ): Promise<Restaurant> {
+    return this.restaurantModel
+      .updateOne(
+        {
+          _id: id,
+        },
+        restaurantDto,
+      )
+      .then(() => {
+        return this.restaurantModel.findById(id);
+      });
+  }
 }

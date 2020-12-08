@@ -127,6 +127,7 @@ export default {
           const data = res.data;
           this.name = data.name;
           this.tags = data.tags;
+          this.image = `http://localhost:3000/restaurants/${this.restaurantId}/logo`;
         });
     },
 
@@ -150,7 +151,13 @@ export default {
         }
 
         if (this.restaurantId) {
-          console.log("send update request");
+          axios
+            .put(`http://localhost:3000/restaurants/${this.restaurantId}`, body, {
+              headers: {'Content-Type': 'multipart/form-data' }
+            })
+            .then((res) => {
+              this.isEditing = false;
+            });
         } else {
           axios
             .post("http://localhost:3000/restaurants/", body, {
