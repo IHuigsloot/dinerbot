@@ -3,6 +3,7 @@ import { WsAdapter } from '@nestjs/platform-ws';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as swStats from 'swagger-stats';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,11 +18,19 @@ async function bootstrap() {
 
   app.useWebSocketAdapter(new WsAdapter(app));
 
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
+
   app.use(
     swStats.getMiddleware({
       swaggerSpec: document,
     }),
   );
+
+  app.enableCors();
 
   await app.listen(3000);
 }

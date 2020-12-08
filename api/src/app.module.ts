@@ -11,13 +11,19 @@ import { UserMiddleware } from './common/middlewares/user.middleware';
 import { EventsModule } from './events/events.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
+import { RestaurantsModule } from './restaurants/restaurants.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
     OrdersModule,
     EventsModule,
+    RestaurantsModule,
     EventEmitterModule.forRoot(),
     MongooseModule.forRoot('mongodb://localhost/nest'),
+    MulterModule.register({
+      dest: './files',
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
