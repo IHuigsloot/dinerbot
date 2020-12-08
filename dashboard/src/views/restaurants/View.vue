@@ -76,7 +76,7 @@ import axios from "axios";
 
 export default {
   components: {
-    ImageUpload,
+    ImageUpload
   },
 
   data() {
@@ -90,10 +90,8 @@ export default {
       isImageChanged: false,
       tags: [],
       tagsSearch: "",
-      nameRules: [(v) => !!v || "Naam is verplicht"],
-      tagsRules: [
-        (v) => (v && v.length > 0) || "Moet ten minste 1 tag bevatten",
-      ],
+      nameRules: [v => !!v || "Naam is verplicht"],
+      tagsRules: [v => (v && v.length > 0) || "Moet ten minste 1 tag bevatten"]
     };
   },
 
@@ -123,7 +121,7 @@ export default {
       }
       axios
         .get("http://localhost:3000/restaurants/" + restaurantId)
-        .then((res) => {
+        .then(res => {
           const data = res.data;
           this.name = data.name;
           this.tags = data.tags;
@@ -136,34 +134,37 @@ export default {
       setTimeout(() => {
         const { name, tags, valid } = this;
 
-
         if (!valid) {
           return;
         }
 
         const body = new FormData();
-        body.append('name', name);
-        body.append('tags', tags);
+        body.append("name", name);
+        body.append("tags", tags);
 
         if (this.isImageChanged) {
           const blob = dataURLtoBlob(this.image);
-          body.append('image', blob);
+          body.append("image", blob);
         }
 
         if (this.restaurantId) {
           axios
-            .put(`http://localhost:3000/restaurants/${this.restaurantId}`, body, {
-              headers: {'Content-Type': 'multipart/form-data' }
-            })
-            .then((res) => {
+            .put(
+              `http://localhost:3000/restaurants/${this.restaurantId}`,
+              body,
+              {
+                headers: { "Content-Type": "multipart/form-data" }
+              }
+            )
+            .then(() => {
               this.isEditing = false;
             });
         } else {
           axios
             .post("http://localhost:3000/restaurants/", body, {
-              headers: {'Content-Type': 'multipart/form-data' }
+              headers: { "Content-Type": "multipart/form-data" }
             })
-            .then((res) => {
+            .then(res => {
               this.isEditing = false;
               const id = res.data._id;
               this.$router.push(id);
@@ -182,8 +183,8 @@ export default {
     changeImage(image) {
       this.image = image;
       this.isImageChanged = true;
-    },
-  },
+    }
+  }
 };
 </script>
 

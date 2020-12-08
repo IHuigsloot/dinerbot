@@ -35,7 +35,9 @@
             >
               <v-list-item-avatar size="80" rounded="rounded">
                 <v-img
-                  :src="`http://localhost:3000/restaurants/${restaurant._id}/logo`"
+                  :src="
+                    `http://localhost:3000/restaurants/${restaurant._id}/logo`
+                  "
                 ></v-img>
               </v-list-item-avatar>
               <v-list-item-content class="ml-4">
@@ -43,7 +45,9 @@
                   restaurant.name
                 }}</v-list-item-title>
                 <v-list-item-subtitle class="text-subtitle-2"
-                  ><span v-for="tag in restaurant.tags" :key="tag">{{ tag }}, </span></v-list-item-subtitle
+                  ><span v-for="tag in restaurant.tags" :key="tag"
+                    >{{ tag }},
+                  </span></v-list-item-subtitle
                 >
               </v-list-item-content>
               <v-list-item-icon>

@@ -38,7 +38,7 @@
             class="cropper"
             :src="previewImage"
             :stencil-props="{
-              aspectRatio: 10 / 10,
+              aspectRatio: 10 / 10
             }"
           />
           <v-row align="center" justify="space-around" class="mt-2">
@@ -65,16 +65,13 @@ import { Cropper } from "vue-advanced-cropper";
 
 export default {
   components: { Cropper },
-  props: [
-    'image',
-    'disabled'
-  ],
+  props: ["image", "disabled"],
 
   data() {
     return {
       dialog: false,
       previewImage: null,
-      isUploading: false,
+      isUploading: false
     };
   },
   methods: {
@@ -83,7 +80,7 @@ export default {
       const input = event.target;
       if (input.files && input.files[0]) {
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = e => {
           this.previewImage = e.target.result;
         };
         reader.readAsDataURL(input.files[0]);
@@ -92,10 +89,10 @@ export default {
     setImage() {
       const { canvas } = this.$refs.cropper.getResult();
       const image = canvas.toDataURL();
-      this.$emit('photo-change', image);
+      this.$emit("photo-change", image);
       this.isUploading = false;
-    },
-  },
+    }
+  }
 };
 </script>
 
