@@ -140,7 +140,9 @@ export default {
 
         const body = new FormData();
         body.append("name", name);
-        body.append("tags", tags);
+        for(let i = 0; i < tags.length; i++) {
+          body.append("tags[]", tags[i]);
+        }
 
         if (this.isImageChanged) {
           const blob = dataURLtoBlob(this.image);
