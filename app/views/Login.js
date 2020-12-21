@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { View, StatusBar, Image, StyleSheet } from 'react-native';
 import { Button, TextInput, Text, useTheme } from 'react-native-paper';
 
-import { AuthContext } from '../Navigation';
+import { useAuthContext } from '../utils/authContext';
 
 export default function Login() {
 	const { colors } = useTheme();
-	const { signIn } = React.useContext(AuthContext);
+	const { signIn } = useAuthContext();
 
 	const [email, setEmail] = useState('');
 

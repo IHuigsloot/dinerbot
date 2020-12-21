@@ -3,10 +3,10 @@ import { View } from 'react-native';
 import Menu, { MenuItem } from 'react-native-material-menu';
 import { IconButton } from 'react-native-paper';
 
-import { AuthContext } from '../Navigation';
+import { useAuthContext } from '../utils/authContext';
 
 export default function PopoverMenu(props) {
-  const { signOut } = React.useContext(AuthContext);
+	const { signOut } = useAuthContext();
   let _menu = null;
   
   return (

@@ -5,13 +5,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useTheme } from 'react-native-paper';
 
-import { setItem, getItem, removeItem } from './utils/storage';
 import Login from './views/Login';
 import Restaurants from './views/Restaurants.js';
 import Products from './views/Products';
 import Map from './views/Map';
 
-export const AuthContext = React.createContext();
+import { getItem } from './utils/storage';
+import AuthContextProvider from './utils/authContext';
+import useAuthReducer from './utils/authReducer';
 
 const Tab = createBottomTabNavigator();
 const RestaurantStack = createStackNavigator();
@@ -78,35 +79,7 @@ function AppStack() {
 }
 
 export default function Navigation() {
-  const [state, dispatch] = React.useReducer(
-    (prevState, action) => {
-      switch (action.type) {
-        case 'RESTORE_TOKEN':
-          return {
-            ...prevState,
-            email: action.email,
-            isLoading: false,
-          };
-        case 'SIGN_IN':
-          return {
-            ...prevState,
-            isSignout: false,
-            email: action.email,
-          };
-        case 'SIGN_OUT':
-          return {
-            ...prevState,
-            isSignout: true,
-            email: null,
-          };
-      }
-    },
-    {
-      isLoading: true,
-      isSignout: false,
-      email: null,
-    }
-  );
+  const [state, dispatch] = useAuthReducer();
 
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
@@ -127,24 +100,10 @@ export default function Navigation() {
     };
 
     bootstrapAsync();
-  }, []);
-
-  const authContext = React.useMemo(
-    () => ({
-      signIn: async data => {
-				setItem('email', data.email);
-        dispatch({ type: 'SIGN_IN', email: data.email });
-      },
-      signOut: () => {
-				removeItem('email');
-				dispatch({ type: 'SIGN_OUT' })
-			}
-    }),
-    []
-  );
+  }, [state]);
 
   return (
-    <AuthContext.Provider value={authContext}>
+    <AuthContextProvider>
       <NavigationContainer>
         <RootStack.Navigator headerMode="none" animation="fade">
           {state.email == null ? (
@@ -154,6 +113,6 @@ export default function Navigation() {
           )}
         </RootStack.Navigator>
       </NavigationContainer>
-    </AuthContext.Provider>
+    </AuthContextProvider>
   );
 }
