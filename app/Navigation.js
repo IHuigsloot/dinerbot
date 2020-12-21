@@ -114,7 +114,7 @@ export default function Navigation() {
       let email;
 
       try {
-        email = getItem('email');
+        email = await getItem('email');
       } catch (e) {
         // Restoring token failed
       }
