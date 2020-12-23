@@ -13,6 +13,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { PathingModule } from './pathing/pathing.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { MulterModule } from '@nestjs/platform-express';
     MulterModule.register({
       dest: './files',
     }),
+    PathingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
