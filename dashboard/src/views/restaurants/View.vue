@@ -66,17 +66,26 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row>
+      <v-col cols="12">
+        <v-card class="px-4 py-2" outlined>
+          <ProductList />
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import ImageUpload from "@/components/ImageUpload";
+import ProductList from "@/components/products/List";
 import { dataURLtoBlob } from "@/helpers";
 import axios from "axios";
 
 export default {
   components: {
-    ImageUpload
+    ImageUpload,
+    ProductList
   },
 
   data() {
