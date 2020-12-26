@@ -28,7 +28,7 @@ export class RestaurantsService {
     id: string,
     restaurantDto: CreateRestaurantDto,
   ): Promise<Restaurant> {
-    const restaurant = this.findRestaurant(id);
+    const restaurant = await this.findRestaurant(id);
     return Object.assign(restaurant, { ...restaurantDto });
   }
 
