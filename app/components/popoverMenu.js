@@ -1,26 +1,30 @@
 import React from 'react';
 import { View } from 'react-native';
-import Menu, { MenuItem } from 'react-native-material-menu';
-import { IconButton } from 'react-native-paper';
+import { IconButton, Menu } from "react-native-paper";
 
 import { useAuthContext } from '../utils/authContext';
 
 export default function PopoverMenu(props) {
 	const { signOut } = useAuthContext();
-  let _menu = null;
+  const [visible, setVisible] = React.useState(false);
+
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
+  const logout = () => {
+    signOut();
+    closeMenu();
+  };
   
   return (
-    <View style={props.menustyle}>
+    <View>
       <Menu
-        ref={(ref) => (_menu = ref)}
-        button={<IconButton color={"white"} icon="dots-vertical" onPress={() => _menu.show()} />} >
-        <MenuItem
-          onPress={() => {
-            signOut();
-            _menu.hide();
-          }}>
-          Uitloggen
-        </MenuItem>
+        visible={visible}
+        onDismiss={closeMenu}
+        anchor={
+          <IconButton color={"white"} icon="dots-vertical" onPress={openMenu} />
+        }
+      >
+        <Menu.Item onPress={logout} title="Uitloggen" />
       </Menu>
     </View>
   );
