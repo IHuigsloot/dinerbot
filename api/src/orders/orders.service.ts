@@ -35,10 +35,11 @@ export class OrdersService {
 
   async updateOne(id: string, updateOrderDto: UpdateOrderDto): Promise<Order> {
     const order = await this.findOrder(id);
-    return Object.assign(order, { ...updateOrderDto });
+    Object.assign(order, { ...updateOrderDto });
+    return order.save();
   }
 
-  private async findOrder(id: string): Promise<Order> {
+  private async findOrder(id: string): Promise<OrderDocument> {
     let order;
     try {
       order = await this.orderModel.findById(id).exec();
