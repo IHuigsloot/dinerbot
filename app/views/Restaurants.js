@@ -1,19 +1,56 @@
-import React from 'react';
-import { View } from 'react-native';
-import { Button, useTheme } from 'react-native-paper'
+import React, { useState } from 'react';
+import { ScrollView, View } from 'react-native';
+import { Card, Text, Title } from 'react-native-paper'
+import axios from 'axios';
 
 import Header from '../components/header';
+import { RestaurantCard } from '../components/card';
+import { environment } from '../environment/environment';
 
-export default function Login({navigation}) {
-	const { colors } = useTheme();
+export default function Restaurants({ navigation }) {
+  const [data, setData] = useState([]);
+  const [error, setError] = useState('');
 
-	return (
+  React.useEffect(() => {
+    axios.get(`${environment.api_url}/restaurants`).then(res => {
+      setData(res.data);
+    }).catch(err => {
+      // Temp error handling
+      setError(err);
+    })
+  }, [])
+
+  const restaurants = data.map(restaurant => {
+    return (
+      <RestaurantCard
+        navigation={navigation}
+        key={restaurant._id}
+        id={restaurant._id}
+        title={restaurant.name}
+        subtitle={restaurant.tags.join(', ')}
+        image={`${environment.api_url}/restaurants/${restaurant._id}/logo`}
+      />
+    )
+  })
+
+  return (
     <View>
       <Header title="Restaurants" home navigation={navigation} />
-			{/* Temporary button */}
-      <Button mode="contained" style={{marginTop: 12, marginHorizontal: 6}} color={colors.accent} onPress={() => navigation.navigate('Producten')} >
-				Producten
-			</Button>
+      <ScrollView>
+        {error ? (
+          // Temp error handling
+          <Card>
+            <Card.Content>
+              <Title>Error</Title>
+              <Text>Something went wrong.</Text>
+            </Card.Content>
+          </Card>
+        ) : (
+            <View style={{ marginVertical: 12 }}>
+              {restaurants}
+            </View>
+          )}
+      </ScrollView>
     </View>
   )
 }

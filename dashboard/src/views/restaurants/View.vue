@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col cols="7">
-        <h1>Nieuw restaurant</h1>
+        <h1>{{ name ? name : "Nieuw restaurant" }}</h1>
       </v-col>
       <v-col cols="5">
         <v-row justify="end" v-if="!isEditing">
@@ -140,7 +140,9 @@ export default {
 
         const body = new FormData();
         body.append("name", name);
-        body.append("tags", tags);
+        for (let i = 0; i < tags.length; i++) {
+          body.append("tags[]", tags[i]);
+        }
 
         if (this.isImageChanged) {
           const blob = dataURLtoBlob(this.image);

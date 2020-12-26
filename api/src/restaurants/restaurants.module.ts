@@ -12,5 +12,6 @@ import { Restaurant, RestaurantSchema } from './schemas/restaurant.schema';
   ],
   controllers: [RestaurantsController],
   providers: [RestaurantsService],
+  exports: [RestaurantsService],
 })
 export class RestaurantsModule {}

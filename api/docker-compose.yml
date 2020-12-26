@@ -8,4 +8,6 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
     ports:
       - "${DATABASE_PORT}:${DATABASE_PORT}"
+    volumes: 
+      - /data/db:/data/db
     
