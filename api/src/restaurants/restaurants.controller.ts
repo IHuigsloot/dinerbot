@@ -51,6 +51,7 @@ export class RestaurantsController {
     if (image) {
       createRestaurantDto.image = image.filename;
     }
+    return createRestaurantDto;
     return this.restaurantService.updateOne(id, createRestaurantDto);
   }
 

@@ -4,7 +4,6 @@ import { Restaurant } from 'src/restaurants/schemas/restaurant.schema';
 import { Status } from '../status';
 
 export type OrderDocument = Order & mongoose.Document;
-
 @Schema()
 export class Order {
   @Prop()
