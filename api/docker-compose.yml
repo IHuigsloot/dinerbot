@@ -9,7 +9,5 @@ services:
     ports:
       - "${DATABASE_PORT}:${DATABASE_PORT}"
     volumes: 
-      - dbdata:/data/db
-      
-volumes:
-  dbdata:
+      - /data/db:/data/db
+    

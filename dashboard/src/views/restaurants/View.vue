@@ -66,26 +66,17 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row v-if="!!restaurantId">
-      <v-col cols="12">
-        <v-card class="px-4 py-2" outlined>
-          <ProductList v-bind:restaurant="restaurantId" />
-        </v-card>
-      </v-col>
-    </v-row>
   </v-container>
 </template>
 
 <script>
 import ImageUpload from "@/components/ImageUpload";
-import ProductList from "@/components/products/List";
 import { dataURLtoBlob } from "@/helpers";
 import axios from "axios";
 
 export default {
   components: {
-    ImageUpload,
-    ProductList
+    ImageUpload
   },
 
   data() {
@@ -94,7 +85,8 @@ export default {
       restaurantId: null,
       isEditing: false,
       name: "",
-      image: null,
+      image:
+        "https://media-cdn.tripadvisor.com/media/photo-s/09/5c/46/b0/domino-s-pizza-milnerton.jpg",
       isImageChanged: false,
       tags: [],
       tagsSearch: "",
@@ -134,7 +126,6 @@ export default {
           this.name = data.name;
           this.tags = data.tags;
           this.image = `http://localhost:3000/restaurants/${this.restaurantId}/logo`;
-          console.log(this.image);
         });
     },
 
