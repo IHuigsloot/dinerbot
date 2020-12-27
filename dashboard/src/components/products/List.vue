@@ -10,7 +10,7 @@
         <v-expansion-panel-header
           ><div class="d-flex">
             {{ product.name }}<v-spacer></v-spacer
-            ><span class="mr-6">€ {{ product.price }}</span>
+            ><span class="mr-6">€ {{ product.price.toFixed(2) }}</span>
           </div></v-expansion-panel-header
         >
         <v-expansion-panel-content>

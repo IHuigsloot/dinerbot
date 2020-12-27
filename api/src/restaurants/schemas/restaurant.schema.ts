@@ -10,9 +10,7 @@ export class Restaurant {
   @Prop([String])
   tags: string[];
 
-  @Prop({
-    select: false,
-  })
+  @Prop()
   image: string;
 }
 

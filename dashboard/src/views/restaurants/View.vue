@@ -94,7 +94,7 @@ export default {
       restaurantId: null,
       isEditing: false,
       name: "",
-      image: require("../../assets/no-image.jpg"),
+      image: null,
       isImageChanged: false,
       tags: [],
       tagsSearch: "",

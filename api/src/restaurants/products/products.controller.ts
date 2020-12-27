@@ -10,9 +10,11 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { RestaurantGuard } from 'src/restaurants/products/restaurant-guard';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { Restaurant } from '../schemas/restaurant.schema';
+import { Product } from './product.schema';
 import { ProductsService } from './products.service';
 
 const RestaurantDeco = createParamDecorator(
@@ -22,13 +24,16 @@ const RestaurantDeco = createParamDecorator(
   },
 );
 
+@ApiTags('products')
 @Controller('restaurants/:restaurant/products')
 @UseGuards(RestaurantGuard)
 export class ProductsController {
   constructor(private productService: ProductsService) {}
 
   @Get()
-  getAllForRestaurant(@Param('restaurant') restaurantId: string) {
+  getAllForRestaurant(
+    @Param('restaurant') restaurantId: string,
+  ): Promise<Product[]> {
     return this.productService.findAllForRestaurant(restaurantId);
   }
 
