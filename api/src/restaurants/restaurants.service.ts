@@ -29,10 +29,11 @@ export class RestaurantsService {
     restaurantDto: CreateRestaurantDto,
   ): Promise<Restaurant> {
     const restaurant = await this.findRestaurant(id);
-    return Object.assign(restaurant, { ...restaurantDto });
+    Object.assign(restaurant, { ...restaurantDto });
+    return restaurant.save();
   }
 
-  private async findRestaurant(id: string): Promise<Restaurant> {
+  private async findRestaurant(id: string): Promise<RestaurantDocument> {
     let restaurant;
     try {
       restaurant = await this.restaurantModel.findById(id).exec();
