@@ -14,7 +14,7 @@
         <v-btn color="green darken-1" text @click="dialog = false">
           Annuleren
         </v-btn>
-        <v-btn color="red darken-1" text @click="dialog = false">
+        <v-btn color="red darken-1" text @click="remove">
           verwijderen
         </v-btn>
       </v-card-actions>
@@ -23,11 +23,25 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
+  props: ["restaurant", "product"],
   data() {
     return {
-      dialog: false,
+      dialog: false
     };
   },
+  methods: {
+    remove() {
+      axios
+        .delete(
+          `http://localhost:3000/restaurants/${this.restaurant}/products/${this.product}`
+        )
+        .then(() => {
+          this.$emit("deleted", this.product);
+          this.dialog = false;
+        });
+    }
+  }
 };
 </script>
