@@ -1,15 +1,18 @@
 import React from 'react';
-import { Title, List, IconButton } from 'react-native-paper';
+import { Title, List, IconButton, Divider } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 
 export function CartList({title, count, onPress}) {
   return (
+    <>
+    <Divider />
     <List.Item 
       title={title}
       titleNumberOfLines={4}
       right={() => <IconButton style={styles.button} color="white" icon="minus" onPress={onPress} />}
       left={() => <Title style={styles.counter}>{count}</Title>} 
     />
+    </>
   )
 }
 
