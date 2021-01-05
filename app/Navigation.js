@@ -13,6 +13,7 @@ import Map from './views/Map';
 import { getItem } from './utils/storage';
 import AuthContextProvider from './utils/authContext';
 import useAuthReducer from './utils/authReducer';
+import CartContextProvider from './utils/cartContext';
 
 const Tab = createBottomTabNavigator();
 const RestaurantStack = createStackNavigator();
@@ -52,29 +53,31 @@ function AppStack() {
 	const {colors} = useTheme();
 
   return (
-		<Tab.Navigator 
-			tabBarOptions={{
-				activeTintColor: colors.accent,
-				showLabel: false,
-			}} 
-			headerMode="none">
-			<Tab.Screen 
-				name="Restaurant" 
-				component={RestaurantStackScreen}
-				options={{
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="store" color={color} size={30} />
-          ),
-				}} />
-      <Tab.Screen  
-				name="Map" 
-				component={MapStackScreen}
-				options={{
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="map" color={color} size={30} />
-          ),
-				}}  />
-    </Tab.Navigator>
+    <CartContextProvider>
+      <Tab.Navigator 
+        tabBarOptions={{
+          activeTintColor: colors.accent,
+          showLabel: false,
+        }} 
+        headerMode="none">
+        <Tab.Screen 
+          name="Restaurant" 
+          component={RestaurantStackScreen}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons name="store" color={color} size={30} />
+            ),
+          }} />
+        <Tab.Screen  
+          name="Map" 
+          component={MapStackScreen}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons name="map" color={color} size={30} />
+            ),
+          }}  />
+      </Tab.Navigator>
+    </CartContextProvider>
   );
 }
 
