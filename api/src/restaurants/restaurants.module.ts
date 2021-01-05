@@ -16,6 +16,6 @@ import { Product, ProductSchema } from './products/product.schema';
   ],
   controllers: [RestaurantsController, ProductsController],
   providers: [RestaurantsService, ProductsService],
-  exports: [RestaurantsService],
+  exports: [RestaurantsService, ProductsService],
 })
 export class RestaurantsModule {}

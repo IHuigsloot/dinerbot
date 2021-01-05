@@ -20,7 +20,7 @@ export class Product {
     ref: 'Restaurant',
     required: true,
   })
-  restaurant: Restaurant;
+  restaurant: Restaurant | string;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

@@ -69,7 +69,7 @@ export default {
 
   data() {
     return {
-      defaultImage: require('../assets/no-image.jpg'),
+      defaultImage: require("../assets/no-image.jpg"),
       dialog: false,
       previewImage: null,
       isUploading: false

@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
+import { Product } from 'src/restaurants/products/product.schema';
 import { Restaurant } from 'src/restaurants/schemas/restaurant.schema';
 import { Status } from '../status';
 
@@ -15,6 +16,11 @@ export class Order {
     autopopulate: true,
   })
   restaurant: Restaurant;
+
+  @Prop({
+    required: true,
+  })
+  products: Product[];
 
   @Prop({
     default: 'created',

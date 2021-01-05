@@ -16,6 +16,7 @@ import { OrdersService } from './orders.service';
 import { Request } from 'express';
 import { RestaurantsService } from 'src/restaurants/restaurants.service';
 import { UpdateOrderDto } from './dto/update-restaurant.dto';
+import { ProductsService } from 'src/restaurants/products/products.service';
 
 @Api('orders')
 @Controller('orders')
@@ -24,6 +25,7 @@ export class OrdersController {
     private readonly orderService: OrdersService,
     private eventEmitter: EventEmitter2,
     private restaurantService: RestaurantsService,
+    private productsService: ProductsService,
   ) {}
 
   @Post()
@@ -31,10 +33,23 @@ export class OrdersController {
     @Req() request: Request,
     @Body() createOrderDto: CreateOrderDto,
   ) {
+    const { restaurant, products } = createOrderDto;
+
+    await this.restaurantService.findOne(restaurant); // Validate restaurant
+    const validatedProducts = await this.productsService.getProductsByIdFromRestaurant(
+      restaurant,
+      products,
+    );
+
+    if (validatedProducts.length !== products.length) {
+      throw new HttpException(
+        'Not all products are available',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    createOrderDto.products = validatedProducts;
+
     const order = { ...createOrderDto, user: request['user'] };
-
-    await this.restaurantService.findOne(createOrderDto.restaurant); // Validate restaurant
-
     return this.orderService.create(order);
   }
 
