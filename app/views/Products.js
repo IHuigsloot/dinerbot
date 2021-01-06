@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
-import { useTheme, Card, List, Divider, Button } from 'react-native-paper';
+import { useTheme, Button } from 'react-native-paper';
 import axios from 'axios';
 
 import Header from '../components/header';
@@ -23,10 +23,6 @@ export default function Products({ navigation, route }) {
       setError(err);
     })
   }, [])
-
-  React.useEffect(() => {
-    cart.length == 0 ? console.log('empty') : console.log('full');
-  },[cart]);
 
   const products = data.map((product) => {
     const res = cart.find(item => item._id === product._id)
@@ -64,11 +60,11 @@ export default function Products({ navigation, route }) {
       </ScrollView>
       <View>
         {cart.length === 0 ? (
-          <Button disabled='true' style={styles.button} icon="cart" mode="contained" color={colors.accent} onPress={() => navigation.navigate('Winkelwagen', {title: route.params.title})}>
+          <Button disabled='true' style={styles.button} icon="cart" mode="contained" color={colors.accent} >
             Winkelwagen 
           </Button>
         ) : (
-          <Button style={styles.button} icon="cart" mode="contained" color={colors.accent} onPress={() => navigation.navigate('Winkelwagen', {title: route.params.title})}>
+          <Button style={styles.button} icon="cart" mode="contained" color={colors.accent} onPress={() => navigation.navigate('Winkelwagen', {title: route.params.title, id: route.params.id})} >
             Winkelwagen €{total}
           </Button>
         )}

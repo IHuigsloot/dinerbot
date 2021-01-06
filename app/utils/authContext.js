@@ -1,6 +1,7 @@
 import React from 'react';
 import { setItem, removeItem, getItem } from './storage';
 import useAuthReducer from './authReducer';
+import setAuthUser from '../utils/setAuthUser';
 
 const AuthContext = React.createContext();
 
@@ -14,12 +15,14 @@ export default function AuthContextProvider(props) {
   const authContext = React.useMemo(
     () => ({
       signIn: async data => {
+        setAuthUser(data.email);
         setItem('email', data.email);
         dispatch({ type: 'SIGN_IN', email: data.email });
       },
       signOut: () => {
+        setAuthUser();
         removeItem('email');
-        dispatch({ type: 'SIGN_OUT' })
+        dispatch({ type: 'SIGN_OUT' });
       }
     }),
     []

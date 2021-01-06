@@ -15,6 +15,7 @@ import AuthContextProvider from './utils/authContext';
 import useAuthReducer from './utils/authReducer';
 import CartContextProvider from './utils/cartContext';
 import Cart from './views/Cart';
+import setAuthUser from './utils/setAuthUser';
 
 const Tab = createBottomTabNavigator();
 const RestaurantStack = createStackNavigator();
@@ -97,6 +98,7 @@ export default function Navigation() {
 
       try {
         email = await getItem('email');
+        setAuthUser(email);
       } catch (e) {
         // Restoring token failed
       }
