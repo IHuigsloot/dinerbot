@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
@@ -21,22 +21,34 @@ export class RestaurantsService {
   }
 
   async findOne(id: string): Promise<Restaurant> {
-    return this.restaurantModel.findById(id).exec();
+    return this.findRestaurant(id);
   }
 
   async updateOne(
     id: string,
     restaurantDto: CreateRestaurantDto,
   ): Promise<Restaurant> {
-    return this.restaurantModel
-      .updateOne(
-        {
-          _id: id,
-        },
-        restaurantDto,
-      )
-      .then(() => {
-        return this.restaurantModel.findById(id);
-      });
+    const restaurant = await this.findRestaurant(id);
+    Object.assign(restaurant, { ...restaurantDto });
+    return restaurant.save();
+  }
+
+  private async findRestaurant(id: string): Promise<RestaurantDocument> {
+    let restaurant;
+    try {
+      restaurant = await this.restaurantModel.findById(id).exec();
+    } catch (error) {
+      throw new HttpException(
+        'No restaurant found with the given id',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    if (!restaurant) {
+      throw new HttpException(
+        'No restaurant found with the given id',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return restaurant;
   }
 }

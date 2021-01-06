@@ -14,6 +14,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { PathingModule } from './pathing/pathing.module';
+import * as autopopulate from 'mongoose-autopopulate';
 
 @Module({
   imports: [
@@ -21,7 +22,12 @@ import { PathingModule } from './pathing/pathing.module';
     EventsModule,
     RestaurantsModule,
     EventEmitterModule.forRoot(),
-    MongooseModule.forRoot('mongodb://localhost/nest'),
+    MongooseModule.forRoot('mongodb://localhost/nest', {
+      connectionFactory: (connection) => {
+        connection.plugin(autopopulate);
+        return connection;
+      },
+    }),
     MulterModule.register({
       dest: './files',
     }),

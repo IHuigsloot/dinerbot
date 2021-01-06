@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col cols="7">
-        <h1>Nieuw restaurant</h1>
+        <h1>{{ name ? name : "Nieuw restaurant" }}</h1>
       </v-col>
       <v-col cols="5">
         <v-row justify="end" v-if="!isEditing">
@@ -66,17 +66,26 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row v-if="!!restaurantId">
+      <v-col cols="12">
+        <v-card class="px-4 py-2" outlined>
+          <ProductList v-bind:restaurant="restaurantId" />
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import ImageUpload from "@/components/ImageUpload";
+import ProductList from "@/components/products/List";
 import { dataURLtoBlob } from "@/helpers";
 import axios from "axios";
 
 export default {
   components: {
-    ImageUpload
+    ImageUpload,
+    ProductList
   },
 
   data() {
@@ -85,8 +94,7 @@ export default {
       restaurantId: null,
       isEditing: false,
       name: "",
-      image:
-        "https://media-cdn.tripadvisor.com/media/photo-s/09/5c/46/b0/domino-s-pizza-milnerton.jpg",
+      image: null,
       isImageChanged: false,
       tags: [],
       tagsSearch: "",
@@ -126,6 +134,7 @@ export default {
           this.name = data.name;
           this.tags = data.tags;
           this.image = `http://localhost:3000/restaurants/${this.restaurantId}/logo`;
+          console.log(this.image);
         });
     },
 
@@ -140,7 +149,7 @@ export default {
 
         const body = new FormData();
         body.append("name", name);
-        for(let i = 0; i < tags.length; i++) {
+        for (let i = 0; i < tags.length; i++) {
           body.append("tags[]", tags[i]);
         }
 

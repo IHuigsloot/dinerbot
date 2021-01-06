@@ -12,9 +12,11 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { RestaurantsService } from './restaurants.service';
 
+@ApiTags('restaurants')
 @Controller('restaurants')
 export class RestaurantsController {
   constructor(private restaurantService: RestaurantsService) {}
@@ -49,6 +51,7 @@ export class RestaurantsController {
     if (image) {
       createRestaurantDto.image = image.filename;
     }
+    return createRestaurantDto;
     return this.restaurantService.updateOne(id, createRestaurantDto);
   }
 

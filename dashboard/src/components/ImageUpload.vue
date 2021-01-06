@@ -5,7 +5,7 @@
         <v-img
           v-bind="attrs"
           v-on="on"
-          :src="image"
+          :src="image || defaultImage"
           class="rounded"
           max-height="450"
           max-width="450"
@@ -69,6 +69,7 @@ export default {
 
   data() {
     return {
+      defaultImage: require("../assets/no-image.jpg"),
       dialog: false,
       previewImage: null,
       isUploading: false
