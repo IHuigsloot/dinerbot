@@ -14,6 +14,7 @@ import { getItem } from './utils/storage';
 import AuthContextProvider from './utils/authContext';
 import useAuthReducer from './utils/authReducer';
 import CartContextProvider from './utils/cartContext';
+import Cart from './views/Cart';
 
 const Tab = createBottomTabNavigator();
 const RestaurantStack = createStackNavigator();
@@ -31,6 +32,11 @@ function RestaurantStackScreen() {
       <RestaurantStack.Screen
         name="Producten"
         component={Products}
+        options={{ tabBarLabel: 'Restaurant!' }}
+      />
+      <RestaurantStack.Screen
+        name="Winkelwagen"
+        component={Cart}
         options={{ tabBarLabel: 'Restaurant!' }}
       />
     </RestaurantStack.Navigator>
