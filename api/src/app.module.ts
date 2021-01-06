@@ -13,6 +13,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { PathingModule } from './pathing/pathing.module';
 import * as autopopulate from 'mongoose-autopopulate';
 
 @Module({
@@ -30,6 +31,7 @@ import * as autopopulate from 'mongoose-autopopulate';
     MulterModule.register({
       dest: './files',
     }),
+    PathingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

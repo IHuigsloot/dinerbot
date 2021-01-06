@@ -46,6 +46,17 @@ export class ProductsService {
     return product.deleteOne();
   }
 
+  async getProductsByIdFromRestaurant(restaurantId: string, productIds: any[]) {
+    return this.productModel
+      .find({
+        restaurant: restaurantId,
+        _id: {
+          $in: productIds,
+        },
+      })
+      .exec();
+  }
+
   private async findProductFromRestaurant(
     productId: string,
     restaurant: Restaurant,
