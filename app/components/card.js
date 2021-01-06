@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Card, Avatar, IconButton, List, Text, Title, Button, useTheme } from 'react-native-paper';
+import { Card, Avatar, IconButton, Button, useTheme } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export function RestaurantCard({ title, subtitle, image, navigation, id }) {
