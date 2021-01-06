@@ -12,4 +12,8 @@ export class CreateRestaurantDto {
   @ApiProperty()
   @IsOptional()
   image: string;
+
+  @ApiProperty()
+  @IsOptional()
+  location: string;
 }

@@ -51,6 +51,12 @@
                     @keyup.tab="updateTags"
                     @paste="updateTags"
                   ></v-combobox>
+
+                  <v-text-field
+                    :class="{ readonly: !isEditing }"
+                    v-model="location"
+                    label="Locatie"
+                  ></v-text-field>
                 </v-form>
               </v-col>
               <v-col cols="1"></v-col>
@@ -94,6 +100,7 @@ export default {
       restaurantId: null,
       isEditing: false,
       name: "",
+      location: "",
       image: null,
       isImageChanged: false,
       tags: [],
@@ -133,6 +140,7 @@ export default {
           const data = res.data;
           this.name = data.name;
           this.tags = data.tags;
+          this.location = data.location;
           this.image = `http://localhost:3000/restaurants/${this.restaurantId}/logo`;
           console.log(this.image);
         });
@@ -141,7 +149,7 @@ export default {
     save() {
       this.$refs.form.validate();
       setTimeout(() => {
-        const { name, tags, valid } = this;
+        const { name, tags, valid, location } = this;
 
         if (!valid) {
           return;
@@ -149,6 +157,7 @@ export default {
 
         const body = new FormData();
         body.append("name", name);
+        body.append("location", location);
         for (let i = 0; i < tags.length; i++) {
           body.append("tags[]", tags[i]);
         }
