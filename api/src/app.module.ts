@@ -14,6 +14,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { PathingModule } from './pathing/pathing.module';
+import { RobotsModule } from './robots/robots.module';
 import * as autopopulate from 'mongoose-autopopulate';
 
 @Module({
@@ -32,6 +33,7 @@ import * as autopopulate from 'mongoose-autopopulate';
       dest: './files',
     }),
     PathingModule,
+    RobotsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

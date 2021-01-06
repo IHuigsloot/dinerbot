@@ -17,6 +17,7 @@ import { Request } from 'express';
 import { RestaurantsService } from 'src/restaurants/restaurants.service';
 import { UpdateOrderDto } from './dto/update-restaurant.dto';
 import { ProductsService } from 'src/restaurants/products/products.service';
+import { RobotsService } from 'src/robots/robots.service';
 
 @Api('orders')
 @Controller('orders')
@@ -26,6 +27,7 @@ export class OrdersController {
     private eventEmitter: EventEmitter2,
     private restaurantService: RestaurantsService,
     private productsService: ProductsService,
+    private robotService: RobotsService,
   ) {}
 
   @Post()
@@ -50,7 +52,12 @@ export class OrdersController {
     createOrderDto.products = validatedProducts;
 
     const order = { ...createOrderDto, user: request['user'] };
-    return this.orderService.create(order);
+    return this.orderService.create(order).then((orderResponse) => {
+      console.log(orderResponse);
+      
+      this.robotService.startRobot(order.restaurant, "B8")
+      return orderResponse;
+    })
   }
 
   @Patch(':id')

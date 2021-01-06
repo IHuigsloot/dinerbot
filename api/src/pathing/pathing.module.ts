@@ -5,5 +5,6 @@ import { PathingController } from './pathing.controller';
 @Module({
   providers: [PathingService],
   controllers: [PathingController],
+  exports: [PathingService],
 })
 export class PathingModule {}
