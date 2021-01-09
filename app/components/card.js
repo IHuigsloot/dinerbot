@@ -28,7 +28,7 @@ export function ProductCard({title, subtitle, price, count, onPress}) {
       <Card.Title
         title={title}
         titleNumberOfLines={2}
-        subtitle={"€" + price + "\n" + subtitle}
+        subtitle={"€" + price.toFixed(2) + "\n" + subtitle}
         subtitleStyle={styles.subtitleProduct}
         subtitleNumberOfLines={5}
         right={() => 
