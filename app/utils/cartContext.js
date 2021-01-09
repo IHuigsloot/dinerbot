@@ -33,9 +33,14 @@ export default function CartContextProvider(props) {
     dispatch({type: 'REMOVE', product});
   }
 
+  const clearCart = () => {
+    dispatch({type: 'CLEAR'});
+  }
+
   const value = {
     addItem,
     deleteItem,
+    clearCart,
     ...state
   }
 
