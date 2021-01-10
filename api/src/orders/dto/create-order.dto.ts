@@ -30,7 +30,7 @@ export class CreateOrderDto {
 
 class ProductObject {
   @IsNotEmpty()
-  id: string;
+  _id: string;
 
   @IsOptional()
   quantity = 0;
