@@ -42,7 +42,7 @@ export class OrdersController {
 
     await this.restaurantService.findOne(restaurant); // Validate restaurant
 
-    const productIds = products.map((product) => product.id);
+    const productIds = products.map((product) => product._id);
     const validatedProducts = await this.productsService.getProductsByIdFromRestaurant(
       restaurant,
       productIds,
@@ -58,7 +58,7 @@ export class OrdersController {
     const newProducts = [];
     for (let index = 0; index < validatedProducts.length; index++) {
       const plain = validatedProducts[index].toObject();
-      const quantity = products.find((product) => plain._id == product.id)
+      const quantity = products.find((product) => plain._id == product._id)
         .quantity;
       plain.quantity = quantity;
       newProducts.push(
