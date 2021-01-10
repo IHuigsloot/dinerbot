@@ -16,7 +16,13 @@ export default function Cart({ navigation, route }) {
   const [name, setName] = React.useState('');
   const [destination, setDestination] = React.useState();
 
-  React.useEffect(() => getItem('email').then(res => setEmail(res)), [])
+  React.useEffect(() => {
+    const fetchMail = async () => {
+      await getItem('email').then(res => setEmail(res))
+    }
+
+    fetchMail();
+  }, [])
 
   const cartItems = cart.map(product => {
     return (
