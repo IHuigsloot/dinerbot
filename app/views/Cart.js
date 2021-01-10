@@ -78,7 +78,7 @@ export default function Cart({ navigation, route }) {
                 style={{ width: '100%', marginBottom: 20 }}
                 value={destination}
                 onChangeText={text => setDestination(text)} />
-              {(cart.length !== 0 && destination !== '' && name !== '') ? (
+              {(cart.length > 0 && destination && name) ? (
                 <Button style={{ marginTop: 20 }} mode="contained" color={colors.accent} onPress={() => makeOrder({ cart: cart, destination: destination })}>Bestellen</Button>
                 ) : (
                 <Button disabled="true" style={{ marginTop: 20 }} mode="contained" color={colors.accent}>Bestellen</Button>
