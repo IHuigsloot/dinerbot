@@ -18,6 +18,9 @@ import { RestaurantsService } from 'src/restaurants/restaurants.service';
 import { UpdateOrderDto } from './dto/update-restaurant.dto';
 import { ProductsService } from 'src/restaurants/products/products.service';
 import { RobotsService } from 'src/robots/robots.service';
+import { classToPlain, Expose, plainToClass } from 'class-transformer';
+import { Product } from 'src/restaurants/products/product.schema';
+import { OrderProduct } from './schemas/order.schema';
 
 @Api('orders')
 @Controller('orders')
@@ -35,12 +38,14 @@ export class OrdersController {
     @Req() request: Request,
     @Body() createOrderDto: CreateOrderDto,
   ) {
-    const { restaurant, products } = createOrderDto;
+    const { restaurant, products, destination } = createOrderDto;
 
     await this.restaurantService.findOne(restaurant); // Validate restaurant
+
+    const productIds = products.map((product) => product.id);
     const validatedProducts = await this.productsService.getProductsByIdFromRestaurant(
       restaurant,
-      products,
+      productIds,
     );
 
     if (validatedProducts.length !== products.length) {
@@ -49,15 +54,27 @@ export class OrdersController {
         HttpStatus.BAD_REQUEST,
       );
     }
-    createOrderDto.products = validatedProducts;
+
+    const newProducts = [];
+    for (let index = 0; index < validatedProducts.length; index++) {
+      const plain = validatedProducts[index].toObject();
+      const quantity = products.find((product) => plain._id == product.id)
+        .quantity;
+      plain.quantity = quantity;
+      newProducts.push(
+        plainToClass(OrderProduct, plain, {
+          excludeExtraneousValues: true,
+        }),
+      );
+    }
+
+    createOrderDto.products = newProducts;
 
     const order = { ...createOrderDto, user: request['user'] };
     return this.orderService.create(order).then((orderResponse) => {
-      console.log(orderResponse);
-      
-      this.robotService.startRobot(order.restaurant, "B8")
+      this.robotService.startRobot(order.restaurant, destination);
       return orderResponse;
-    })
+    });
   }
 
   @Patch(':id')

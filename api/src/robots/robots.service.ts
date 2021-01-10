@@ -39,9 +39,16 @@ export class RobotsService {
       .post(`http://${ipAdress}/order`, {
         steps: path,
       })
-      .subscribe((res) => {
-        console.log(res.data);
-      });
+      .subscribe(
+        (res) => {
+          console.log(res.data);
+        },
+        (err) => {
+          console.log(
+            err.response || 'Robot cannot be reached, might be offline ',
+          );
+        },
+      );
   }
 
   async startRobot(restaurant, endLocation) {

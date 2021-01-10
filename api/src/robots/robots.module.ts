@@ -8,7 +8,9 @@ import { Robot, RobotSchema } from './robot.schema';
 
 @Module({
   imports: [
-    HttpModule,
+    HttpModule.register({
+      timeout: 3000,
+    }),
     MongooseModule.forFeature([{ name: Robot.name, schema: RobotSchema }]),
     PathingModule,
     RestaurantsModule,
