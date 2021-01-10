@@ -1,14 +1,22 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Expose } from 'class-transformer';
 import * as mongoose from 'mongoose';
-import { Product } from 'src/restaurants/products/product.schema';
 import { Restaurant } from 'src/restaurants/schemas/restaurant.schema';
 import { Status } from '../status';
 
 export type OrderDocument = Order & mongoose.Document;
-@Schema()
+@Schema({
+  timestamps: true,
+})
 export class Order {
   @Prop()
   user: string;
+
+  @Prop()
+  name: string;
+
+  @Prop()
+  destination: string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
@@ -20,7 +28,7 @@ export class Order {
   @Prop({
     required: true,
   })
-  products: Product[];
+  products: OrderProduct[];
 
   @Prop({
     default: 'created',
@@ -29,3 +37,17 @@ export class Order {
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
+
+export class OrderProduct {
+  @Expose()
+  name: string;
+
+  @Expose()
+  quantity: number;
+
+  @Expose()
+  price: number;
+
+  @Expose()
+  _id: string;
+}

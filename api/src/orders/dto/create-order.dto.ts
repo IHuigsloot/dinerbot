@@ -1,6 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty } from 'class-validator';
-import { Product } from 'src/restaurants/products/product.schema';
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsOptional,
+  ValidateNested,
+} from 'class-validator';
 
 export class CreateOrderDto {
   @ApiProperty()
@@ -9,6 +14,24 @@ export class CreateOrderDto {
 
   @ApiProperty()
   @IsNotEmpty()
+  readonly destination: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  readonly name: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
   @IsArray()
-  products: string[] | Product[];
+  @ValidateNested({ each: true })
+  @Type(() => ProductObject)
+  products: ProductObject[];
+}
+
+class ProductObject {
+  @IsNotEmpty()
+  id: string;
+
+  @IsOptional()
+  quantity = 0;
 }

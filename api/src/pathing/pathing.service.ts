@@ -59,10 +59,10 @@ export class PathingService {
     const results = {
       distance: distances[endNode],
       path: shortestPath,
-      actions: null
+      actions: null,
     };
     // implement function to make path into movement
-    results.actions = this.createActions(results.path)
+    results.actions = this.createActions(results.path);
 
     // return the shortest path & the end node's distance from the start node
     return results;
@@ -86,71 +86,78 @@ export class PathingService {
       }
     }
     return shortest;
-  };
+  }
 
   createActions(path) {
     // TODO implement function that creates actions out of path
     var previousMove = null;
-    var currentRotation = 0
-    let direction = "N";
+    var currentRotation = 0;
     var actions = [];
     for (var i = 0; i < path.length; i++) {
-      console.log(path[i])
+      console.log(path[i]);
       if (previousMove === null) {
-        console.log("prev is null so this is the start")
+        console.log('prev is null so this is the start');
       } else if (path[i][0] === previousMove[0]) {
-        console.log("prev is same letter")
-        if (parseInt(path[i].substring(1)) < parseInt(previousMove.substring(1))) {
-          console.log("Need to go up")
-          actions = this.calculateTurn(currentRotation, 0, actions)
+        console.log('prev is same letter');
+        if (
+          parseInt(path[i].substring(1)) < parseInt(previousMove.substring(1))
+        ) {
+          console.log('Need to go up');
+          actions = this.calculateTurn(currentRotation, 0, actions);
           currentRotation = 0;
         } else {
-          console.log("Need to go down")
-          actions = this.calculateTurn(currentRotation, 2, actions)
+          console.log('Need to go down');
+          actions = this.calculateTurn(currentRotation, 2, actions);
           currentRotation = 2;
-
         }
       } else {
-        console.log("prev is different letter")
-        if (previousMove[0] === String.fromCharCode(path[i][0].charCodeAt(0) + 1)) {
-          console.log("Need to go left")
-          actions = this.calculateTurn(currentRotation, 3, actions)
+        console.log('prev is different letter');
+        if (
+          previousMove[0] === String.fromCharCode(path[i][0].charCodeAt(0) + 1)
+        ) {
+          console.log('Need to go left');
+          actions = this.calculateTurn(currentRotation, 3, actions);
           currentRotation = 3;
-        } else if (previousMove[0] === String.fromCharCode(path[i][0].charCodeAt(0) - 1)) {
-          console.log("Need to go right")
-          actions = this.calculateTurn(currentRotation, 1, actions)
+        } else if (
+          previousMove[0] === String.fromCharCode(path[i][0].charCodeAt(0) - 1)
+        ) {
+          console.log('Need to go right');
+          actions = this.calculateTurn(currentRotation, 1, actions);
           currentRotation = 1;
         }
       }
       previousMove = path[i];
     }
-    console.log(actions)
+
+    actions = this.calculateTurn(currentRotation, 0, actions, true);
+    return actions;
   }
 
-  calculateTurn(currentRotation, desiredRotation, actions) {
-    var directions = [0, 1, 2, 3]
-    var difference = desiredRotation - currentRotation
-    var absDifference = Math.abs(difference)
-    var negative = Math.sign(difference)
+  calculateTurn(currentRotation, desiredRotation, actions, finished = false) {
+    var directions = [0, 1, 2, 3];
+    var difference = desiredRotation - currentRotation;
+    var absDifference = Math.abs(difference);
+    var negative = Math.sign(difference);
 
     if (difference === 0) {
     } else if (difference % 3 === 0 || difference % 3 === -0) {
       if (negative === -1) {
-        actions.push("R")
+        actions.push('R');
       } else {
-        actions.push("L")
+        actions.push('L');
       }
     } else {
       for (var i = 0; i < absDifference; i++) {
         if (negative === -1) {
-          actions.push("L")
+          actions.push('L');
         } else {
-          actions.push("R")
+          actions.push('R');
         }
       }
     }
-    actions.push("F")
-    return actions
+    if (!finished) {
+      actions.push('F');
+    }
+    return actions;
   }
-
 }
