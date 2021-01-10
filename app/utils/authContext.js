@@ -1,5 +1,5 @@
 import React from 'react';
-import { setItem, removeItem, getItem } from './storage';
+import { setItem, removeItem } from './storage';
 import useAuthReducer from './authReducer';
 import setAuthUser from '../utils/setAuthUser';
 
@@ -11,7 +11,7 @@ export function useAuthContext() {
 
 export default function AuthContextProvider(props) {
   const [state, dispatch] = useAuthReducer()
-  
+
   const authContext = React.useMemo(
     () => ({
       signIn: async data => {
@@ -23,13 +23,13 @@ export default function AuthContextProvider(props) {
         setAuthUser();
         removeItem('email');
         dispatch({ type: 'SIGN_OUT' });
-      }
+      },
     }),
     []
   );
 
   return (
-    <AuthContext.Provider value={authContext}>
+    <AuthContext.Provider value={authContext, { ...state }}>
       {props.children}
     </AuthContext.Provider>
   )

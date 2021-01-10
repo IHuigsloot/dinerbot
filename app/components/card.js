@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Card, Avatar, IconButton, Button, useTheme } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -20,7 +20,7 @@ export function RestaurantCard({ title, subtitle, image, navigation, id }) {
   );
 }
 
-export function ProductCard({title, subtitle, price, count, onPress}) {
+export function ProductCard({title, subtitle, price, quantity, onPress}) {
   const {colors} = useTheme();
   
   return (
@@ -32,8 +32,8 @@ export function ProductCard({title, subtitle, price, count, onPress}) {
         subtitleStyle={styles.subtitleProduct}
         subtitleNumberOfLines={5}
         right={() => 
-          count ? ( 
-            <Button style={styles.counterButton} mode="contained" icon="plus" color={colors.accent} onPress={onPress} >{count}</Button>
+          quantity ? ( 
+            <Button style={styles.quantityButton} mode="contained" icon="plus" color={colors.accent} onPress={onPress} >{quantity}</Button>
           ) : (
             <IconButton style={[{backgroundColor: colors.accent}, styles.button]} color="white" icon="plus" onPress={onPress} />
           )
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
 
-  counterButton: {
+  quantityButton: {
     borderRadius: 50,
     marginRight: 16,
   },  

@@ -14,7 +14,7 @@ export default function Products({ navigation, route }) {
   const [data, setData] = useState([]);
   const [error, setError] = useState('');
   const { addItem, total, cart } = useCartContext();
-  
+
   React.useEffect(() => {
     axios.get(`${environment.api_url}/restaurants/${route.params.id}/products`).then(res => {
       setData(res.data);
@@ -30,11 +30,11 @@ export default function Products({ navigation, route }) {
       return (
         <ProductCard
           key={product._id}
-          count={res.count}
+          quantity={res.quantity}
           title={product.name}
           subtitle={product.description}
           price={product.price}
-          onPress={() => addItem(product)} 
+          onPress={() => addItem(product)}
         />
       )
     } else {
@@ -44,7 +44,7 @@ export default function Products({ navigation, route }) {
           title={product.name}
           subtitle={product.description}
           price={product.price}
-          onPress={() => addItem(product)} 
+          onPress={() => addItem(product)}
         />
       )
     }
@@ -61,13 +61,13 @@ export default function Products({ navigation, route }) {
       <View>
         {cart.length === 0 ? (
           <Button disabled='true' style={styles.button} icon="cart" mode="contained" color={colors.accent} >
-            Winkelwagen 
+            Winkelwagen
           </Button>
         ) : (
-          <Button style={styles.button} icon="cart" mode="contained" color={colors.accent} onPress={() => navigation.navigate('Winkelwagen', {title: route.params.title, id: route.params.id})} >
-            Winkelwagen €{total}
-          </Button>
-        )}
+            <Button style={styles.button} icon="cart" mode="contained" color={colors.accent} onPress={() => navigation.navigate('Winkelwagen', { title: route.params.title, id: route.params.id })} >
+              Winkelwagen €{total}
+            </Button>
+          )}
       </View>
     </>
   )
@@ -75,7 +75,7 @@ export default function Products({ navigation, route }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 12, 
+    marginTop: 12,
     marginBottom: 58
   },
 

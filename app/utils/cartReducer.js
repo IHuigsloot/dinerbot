@@ -7,7 +7,7 @@ const initialState = {
 }
 
 const calculateTotal = cart => {
-  const total = cart.reduce((prev, item) => prev + (item.count * item.price), 0).toFixed(2);
+  const total = cart.reduce((prev, item) => prev + (item.quantity * item.price), 0).toFixed(2);
   storeStates(cart, total);
   return total
 }
@@ -28,7 +28,7 @@ const cartReducer = (state, action) => {
     case 'ADD':
       const check = state.cart.find(item => item._id === action.product._id);
       if (check) {
-        state.cart[state.cart.findIndex(item => item._id === action.product._id)].count++;
+        state.cart[state.cart.findIndex(item => item._id === action.product._id)].quantity++;
         return {
           ...state,
           cart: [...state.cart],
@@ -37,15 +37,15 @@ const cartReducer = (state, action) => {
       } else {
         return {
           ...state,
-          ...state.cart.push({ count: 1, ...action.product }),
+          ...state.cart.push({ quantity: 1, ...action.product }),
           total: calculateTotal(state.cart),
         }
       }
 
     case 'REMOVE':
-      const count = state.cart.find(item => item._id === action.product._id).count;
-      if (count > 1) {
-        state.cart[state.cart.findIndex(item => item._id === action.product._id)].count--;
+      const quantity = state.cart.find(item => item._id === action.product._id).quantity;
+      if (quantity > 1) {
+        state.cart[state.cart.findIndex(item => item._id === action.product._id)].quantity--;
         return {
           ...state,
           cart: [...state.cart],
