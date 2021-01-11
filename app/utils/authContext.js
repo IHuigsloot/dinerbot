@@ -29,7 +29,7 @@ export default function AuthContextProvider(props) {
   );
 
   return (
-    <AuthContext.Provider value={authContext, { ...state }}>
+    <AuthContext.Provider value={authContext}>
       {props.children}
     </AuthContext.Provider>
   )
