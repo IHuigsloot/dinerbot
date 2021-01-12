@@ -15,4 +15,8 @@ export class CreateProductDto {
   @ApiProperty()
   @IsNotEmpty()
   description: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  preperationTime: string;
 }

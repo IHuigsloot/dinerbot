@@ -1,6 +1,11 @@
 import { StatusEnum } from './../orders/status';
 import { OrdersService } from 'src/orders/orders.service';
-import { HttpException, HttpService, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpService,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Order } from 'src/orders/schemas/order.schema';
@@ -39,19 +44,27 @@ export class RestaurantsService {
   }
 
   async startOrder(order: Order) {
-    const restaurant = this.findRestaurant(order.restaurant['_id'])
+    const restaurant = this.findRestaurant(order.restaurant['_id']);
     console.log(order['_id']);
-    
-    return this.httpService.post(`http://192.168.178.40:80/order?PreperationTime=6000&orderID=${order['_id']}`).subscribe((res) => {
-      this.orderService.updateOne(order['_id'], {
-        status: StatusEnum.Preparing
-      })
-    },
-    (err) => {
-      console.log(
-        err.response || 'Restaurant cannot be reached, might be offline ',
+
+    return this.httpService
+      .post(
+        `http://192.168.178.40:80/order?PreperationTime=${
+          order.preperationTime * 1000
+        }&orderID=${order['_id']}`,
+      )
+      .subscribe(
+        (res) => {
+          this.orderService.updateOne(order['_id'], {
+            status: StatusEnum.Preparing,
+          });
+        },
+        (err) => {
+          console.log(
+            err.response || 'Restaurant cannot be reached, might be offline ',
+          );
+        },
       );
-    });
   }
 
   private async findRestaurant(id: string): Promise<RestaurantDocument> {

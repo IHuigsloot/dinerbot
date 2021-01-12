@@ -29,6 +29,18 @@
                 v-model="product.price"
               ></v-text-field>
             </v-col>
+            <v-col cols="8" sm="8">
+              <v-text-field
+                label="Tijd om te maken (in seconden)"
+                required
+                type="number"
+                v-model="product.preperationTime"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="4" sm="4">
+              <span>Omgerekende tijd</span>
+              <p>{{ preperationTimeCalculated }}</p>
+            </v-col>
             <v-col cols="12" sm="12">
               <v-text-field
                 label="Omschrijving"
@@ -62,9 +74,21 @@ export default {
       product: {
         name: "",
         price: 0,
-        description: ""
+        description: "",
+        preperationTime: 0
       }
     };
+  },
+  computed: {
+    preperationTimeCalculated() {
+      if (this.product?.preperationTime) {
+        const time = new Date(this.product?.preperationTime * 1000)
+          .toISOString()
+          .substr(14, 5);
+        return time;
+      }
+      return "00:00";
+    }
   },
   methods: {
     save() {

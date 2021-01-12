@@ -15,6 +15,9 @@ export class Product {
   @Prop({ required: true })
   description: string;
 
+  @Prop()
+  preperationTime: number;
+
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Restaurant',
