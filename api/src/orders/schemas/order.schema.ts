@@ -33,7 +33,10 @@ export class Order {
   @Prop({
     default: 'created',
   })
-  status: Status;
+  status: string;
+
+  @Prop()
+  temperatureHistory: any[];
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

@@ -6,5 +6,5 @@ export class UpdateOrderDto {
   @ApiProperty({ enum: StatusEnum, enumName: 'Status' })
   @IsNotEmpty()
   @IsEnum(StatusEnum)
-  readonly status: Status;
+  readonly status: string;
 }

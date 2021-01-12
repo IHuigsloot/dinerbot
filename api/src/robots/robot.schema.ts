@@ -1,21 +1,22 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
+
 export type RobotDocument = Robot & Document;
 
 @Schema()
 export class Robot {
-    @Prop({ required: true })
-    name: string;
+    @Prop({
+        required: true,
+    })
+    ip : string
 
     @Prop()
-    ip: string
-
-    @Prop()
-    currentLocation:  string;
+    location:  string;
 
     @Prop({
-        default: false,
+        default: null,
     })
-    active: boolean;
+    currentOrder: string;
 }
 
 export const RobotSchema = SchemaFactory.createForClass(Robot);

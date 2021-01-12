@@ -72,7 +72,8 @@ export class OrdersController {
 
     const order = { ...createOrderDto, user: request['user'] };
     return this.orderService.create(order).then((orderResponse) => {
-      this.robotService.startRobot(order.restaurant, destination);
+      this.robotService.startRobot(orderResponse);
+      this.restaurantService.startOrder(orderResponse);
       return orderResponse;
     });
   }
@@ -82,7 +83,11 @@ export class OrdersController {
     @Param('id') id: string,
     @Body() updateOrderDto: UpdateOrderDto,
   ) {
-    return this.orderService.updateOne(id, updateOrderDto);
+    const updatedOrder = await this.orderService.updateOne(id, updateOrderDto);
+    if (updatedOrder.status === 'delivery') {
+      this.robotService.sendRobotToHome(updatedOrder);
+    }
+    return updatedOrder;
   }
 
   @Get()

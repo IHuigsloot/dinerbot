@@ -39,6 +39,15 @@ export class OrdersService {
     return order.save();
   }
 
+  async addTemperature(id: string, temperature) {
+    const order = await this.findOrder(id);
+    order.temperatureHistory.push({
+      temperature,
+      timestamp: new Date(),
+    });
+    return order.save();
+  }
+
   private async findOrder(id: string): Promise<OrderDocument> {
     let order;
     try {

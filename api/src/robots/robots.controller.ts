@@ -1,25 +1,31 @@
+import { StatusEnum } from './../orders/status';
 import { RobotsService } from './robots.service';
-import { Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, forwardRef, Inject, Post } from '@nestjs/common';
+import { SendSensorDataDto } from './dto/send-sensor-data';
+import { InitRobotDto } from './dto/init-robot.dto';
+import { OrdersService } from 'src/orders/orders.service';
 
 @Controller('robots')
 export class RobotsController {
+  constructor(
+    @Inject(forwardRef(() => OrdersService))
+    private orderService: OrdersService,
+    private robotsService: RobotsService,
+) {}
 
-    constructor(private robotsService: RobotsService)  {
+  @Post('me')
+  initRobot(@Body() initRobotDto: InitRobotDto) {
+    return this.robotsService.initRobot(initRobotDto);
+  }
 
+  @Post('data')
+  async sendSensorData(@Body() sensorDataDto: SendSensorDataDto) {
+    const robot = await this.robotsService.findRobotByIp(sensorDataDto.ip);
+    const order = await this.orderService.findOne(robot.currentOrder);
+
+    if (order.status == StatusEnum.Delivery) {
+      await this.orderService.addTemperature(robot.currentOrder, sensorDataDto.temperature);
     }
-
-    @Post('me')
-    initRobot() {
-        // Set robot ip in database
-    }
-
-    @Post('location')
-    updateLocation() {
-
-    }
-
-    @Get('test')
-    test() {
-        this.robotsService.startRobot('5ff58ac843caaefecf71091a', "B8");
-    }
+    return order;
+  }
 }
