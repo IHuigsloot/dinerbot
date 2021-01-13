@@ -1,14 +1,18 @@
 import { OrdersService } from 'src/orders/orders.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { RestaurantsService } from 'src/restaurants/restaurants.service';
-import { HttpService, Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  HttpService,
+  Injectable,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { PathingService } from 'src/pathing/pathing.service';
 import { Robot, RobotDocument } from './robot.schema';
 import { Model } from 'mongoose';
 import { InitRobotDto } from './dto/init-robot.dto';
 import { Order } from 'src/orders/schemas/order.schema';
-import { Status, StatusEnum } from 'src/orders/status';
-import { rootCertificates } from 'tls';
+import { StatusEnum } from 'src/orders/status';
 
 @Injectable()
 export class RobotsService {
@@ -22,7 +26,7 @@ export class RobotsService {
   ) {}
 
   findNearestRobot(location) {
-     return this.robotModel.findOne().exec()
+    return this.robotModel.findOne().exec();
   }
 
   async getRestaurantLocation(id) {
@@ -36,8 +40,6 @@ export class RobotsService {
       endLocation,
     );
 
-    console.log(order);
-    
     this.httpService
       .post(`http://${ipAdress}/order`, {
         steps: pathToRestaurant.actions,
@@ -45,13 +47,13 @@ export class RobotsService {
       .subscribe(
         async (res) => {
           const robot = await this.findRobotByIp(ipAdress);
-          Object.assign(robot, { currentOrder: order['_id'] }) 
+          Object.assign(robot, { currentOrder: order['_id'] });
           await robot.save();
 
           if (order?.status === 'delivery') {
             this.orderService.updateOne(order['_id'], {
-              status: StatusEnum.Delivery
-            })
+              status: StatusEnum.Delivery,
+            });
           }
         },
         (err) => {
@@ -63,12 +65,14 @@ export class RobotsService {
   }
 
   async startRobot(order) {
-    const restaurantLocation = await this.getRestaurantLocation(order.restaurant);
+    const restaurantLocation = await this.getRestaurantLocation(
+      order.restaurant,
+    );
     const nearestRobot = await this.findNearestRobot(restaurantLocation);
 
     return this.sendPathToRobot(
-      nearestRobot.ip,
-      nearestRobot.location,
+      nearestRobot?.ip || '0.0.0.0',
+      nearestRobot?.location || 'A1',
       restaurantLocation,
       order,
     );
@@ -81,7 +85,7 @@ export class RobotsService {
       order.restaurant.location,
       order.destination,
       order,
-    )
+    );
   }
 
   async initRobot(initRobotDto: InitRobotDto) {
@@ -90,7 +94,7 @@ export class RobotsService {
         ip: initRobotDto.ip,
       })
       .exec();
-    
+
     if (robot) {
       Object.assign(robot, { ...initRobotDto });
     } else {
@@ -99,12 +103,14 @@ export class RobotsService {
     return robot.save();
   }
 
-  async findRobotByIp(ip): Promise<RobotDocument>{
+  async findRobotByIp(ip): Promise<RobotDocument> {
     let robot;
     try {
-      robot = await this.robotModel.findOne({
-        ip
-      }).exec();
+      robot = await this.robotModel
+        .findOne({
+          ip,
+        })
+        .exec();
     } catch (error) {
       throw new HttpException(
         'No robot found with the given id',
@@ -120,12 +126,14 @@ export class RobotsService {
     return robot;
   }
 
-  async findRobotByOrder(orderId): Promise<RobotDocument>{
+  async findRobotByOrder(orderId): Promise<RobotDocument> {
     let robot;
     try {
-      robot = await this.robotModel.findOne({
-        currentOrder: orderId,
-      }).exec();
+      robot = await this.robotModel
+        .findOne({
+          currentOrder: orderId,
+        })
+        .exec();
     } catch (error) {
       throw new HttpException(
         'No robot found with the given id',

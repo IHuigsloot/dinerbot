@@ -11,6 +11,7 @@ import { Model } from 'mongoose';
 import { Order } from 'src/orders/schemas/order.schema';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { Restaurant, RestaurantDocument } from './schemas/restaurant.schema';
+import { InitRestaurantDto } from './dto/init-restaurant.dto';
 
 @Injectable()
 export class RestaurantsService {
@@ -20,6 +21,21 @@ export class RestaurantsService {
     private httpService: HttpService,
     private orderService: OrdersService,
   ) {}
+
+  async initRestaurant(initRestaurantDto: InitRestaurantDto) {
+    let restaurant = await this.restaurantModel
+      .findOne({
+        _id: initRestaurantDto.restaurant,
+      })
+      .exec();
+
+    if (restaurant) {
+      Object.assign(restaurant, { ...initRestaurantDto });
+    } else {
+      restaurant = new this.restaurantModel(initRestaurantDto);
+    }
+    return restaurant.save();
+  }
 
   async create(createRestaurantDto: CreateRestaurantDto): Promise<Restaurant> {
     const created = new this.restaurantModel(createRestaurantDto);
@@ -44,12 +60,15 @@ export class RestaurantsService {
   }
 
   async startOrder(order: Order) {
-    const restaurant = this.findRestaurant(order.restaurant['_id']);
-    console.log(order['_id']);
+    const restaurant = await this.findRestaurant(order.restaurant['_id']);
+    if (!restaurant.ip) {
+      // TODO: fallback url, one of the existings urls
+      restaurant.ip = '192.168.178.13';
+    }
 
     return this.httpService
       .post(
-        `http://192.168.178.40:80/order?PreperationTime=${
+        `http://${restaurant.ip}/order?PreperationTime=${
           order.preperationTime * 1000
         }&orderID=${order['_id']}`,
       )
