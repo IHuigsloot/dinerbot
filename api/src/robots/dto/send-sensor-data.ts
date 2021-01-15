@@ -1,16 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional } from "class-validator";
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class SendSensorDataDto {
-    @ApiProperty()
-    @IsNotEmpty()
-    action: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  action: string;
 
-    @ApiProperty()
-    @IsOptional()
-    temperature: number;
+  @ApiProperty()
+  @IsOptional()
+  temperature: number;
 
-    @ApiProperty()
-    @IsNotEmpty()
-    ip: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  ip: string;
 }

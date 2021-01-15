@@ -37,6 +37,9 @@ export class Order {
 
   @Prop()
   temperatureHistory: any[];
+
+  @Prop()
+  preperationTime: number;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
@@ -50,6 +53,9 @@ export class OrderProduct {
 
   @Expose()
   price: number;
+
+  @Expose()
+  preperationTime: number;
 
   @Expose()
   _id: string;

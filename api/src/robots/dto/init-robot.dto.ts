@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { IsOptional } from 'class-validator';
 export class InitRobotDto {
-    @ApiProperty()
-    @IsOptional()
-    ip: string;
+  @ApiProperty()
+  @IsOptional()
+  ip: string;
 
-    @ApiProperty()
-    @IsOptional()
-    location: string;
+  @ApiProperty()
+  @IsOptional()
+  location: string;
 }

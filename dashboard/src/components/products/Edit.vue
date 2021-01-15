@@ -29,6 +29,18 @@
                 v-model="productCopy.price"
               ></v-text-field>
             </v-col>
+            <v-col cols="8" sm="8">
+              <v-text-field
+                label="Tijd om te maken (in seconden)"
+                required
+                type="number"
+                v-model="productCopy.preperationTime"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="4" sm="4">
+              <span>Omgerekende tijd</span>
+              <p>{{ preperationTimeCalculated }}</p>
+            </v-col>
             <v-col cols="12" sm="12">
               <v-text-field
                 label="Omschrijving"
@@ -62,23 +74,42 @@ export default {
         _id: null,
         name: "",
         price: 0,
-        description: ""
+        description: "",
+        preperationTime: 0
       }
     };
+  },
+  computed: {
+    preperationTimeCalculated: function() {
+      if (this.productCopy?.preperationTime) {
+        const time = new Date(this.productCopy?.preperationTime * 1000)
+          .toISOString()
+          .substr(14, 5);
+        return time;
+      }
+      return "00:00";
+    }
   },
   created() {
     this.productCopy = Object.assign({}, this.product);
   },
   methods: {
     save() {
-      const { _id, name, price, description } = this.productCopy;
+      const {
+        _id,
+        name,
+        price,
+        description,
+        preperationTime
+      } = this.productCopy;
       axios
         .put(
           `http://localhost:3000/restaurants/${this.restaurant}/products/${_id}`,
           {
             name,
             price,
-            description
+            description,
+            preperationTime
           }
         )
         .then(res => {

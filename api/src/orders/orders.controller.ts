@@ -55,7 +55,7 @@ export class OrdersController {
       );
     }
 
-    const newProducts = [];
+    const newProducts: OrderProduct[] = [];
     for (let index = 0; index < validatedProducts.length; index++) {
       const plain = validatedProducts[index].toObject();
       const quantity = products.find((product) => plain._id == product._id)
@@ -70,7 +70,13 @@ export class OrdersController {
 
     createOrderDto.products = newProducts;
 
-    const order = { ...createOrderDto, user: request['user'] };
+    const preperationTime = Math.max(
+      ...newProducts.map((product) => {
+        return product.preperationTime || 0;
+      }),
+    );
+
+    const order = { ...createOrderDto, user: request['user'], preperationTime };
     return this.orderService.create(order).then((orderResponse) => {
       this.robotService.startRobot(orderResponse);
       this.restaurantService.startOrder(orderResponse);

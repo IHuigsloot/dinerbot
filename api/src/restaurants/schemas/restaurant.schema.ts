@@ -15,6 +15,9 @@ export class Restaurant {
 
   @Prop()
   location: string;
+
+  @Prop()
+  ip: string;
 }
 
 export const RestaurantSchema = SchemaFactory.createForClass(Restaurant);

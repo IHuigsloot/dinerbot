@@ -1,11 +1,17 @@
 import { StatusEnum } from './../orders/status';
 import { OrdersService } from 'src/orders/orders.service';
-import { HttpException, HttpService, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpService,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Order } from 'src/orders/schemas/order.schema';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { Restaurant, RestaurantDocument } from './schemas/restaurant.schema';
+import { InitRestaurantDto } from './dto/init-restaurant.dto';
 
 @Injectable()
 export class RestaurantsService {
@@ -15,6 +21,21 @@ export class RestaurantsService {
     private httpService: HttpService,
     private orderService: OrdersService,
   ) {}
+
+  async initRestaurant(initRestaurantDto: InitRestaurantDto) {
+    let restaurant = await this.restaurantModel
+      .findOne({
+        _id: initRestaurantDto.restaurant,
+      })
+      .exec();
+
+    if (restaurant) {
+      Object.assign(restaurant, { ...initRestaurantDto });
+    } else {
+      restaurant = new this.restaurantModel(initRestaurantDto);
+    }
+    return restaurant.save();
+  }
 
   async create(createRestaurantDto: CreateRestaurantDto): Promise<Restaurant> {
     const created = new this.restaurantModel(createRestaurantDto);
@@ -39,19 +60,30 @@ export class RestaurantsService {
   }
 
   async startOrder(order: Order) {
-    const restaurant = this.findRestaurant(order.restaurant['_id'])
-    console.log(order['_id']);
-    
-    return this.httpService.post(`http://192.168.178.40:80/order?PreperationTime=6000&orderID=${order['_id']}`).subscribe((res) => {
-      this.orderService.updateOne(order['_id'], {
-        status: StatusEnum.Preparing
-      })
-    },
-    (err) => {
-      console.log(
-        err.response || 'Restaurant cannot be reached, might be offline ',
+    const restaurant = await this.findRestaurant(order.restaurant['_id']);
+    if (!restaurant.ip) {
+      // TODO: fallback url, one of the existings urls
+      restaurant.ip = '192.168.178.13';
+    }
+
+    return this.httpService
+      .post(
+        `http://${restaurant.ip}/order?PreperationTime=${
+          order.preperationTime * 1000
+        }&orderID=${order['_id']}`,
+      )
+      .subscribe(
+        (res) => {
+          this.orderService.updateOne(order['_id'], {
+            status: StatusEnum.Preparing,
+          });
+        },
+        (err) => {
+          console.log(
+            err.response || 'Restaurant cannot be reached, might be offline ',
+          );
+        },
       );
-    });
   }
 
   private async findRestaurant(id: string): Promise<RestaurantDocument> {
