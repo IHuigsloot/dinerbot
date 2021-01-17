@@ -16,7 +16,7 @@ npm run build
 ```
 
 ### Lints and fixes files
-```
+```ca
 npm run lint
 ```
 
