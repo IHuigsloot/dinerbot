@@ -21,10 +21,13 @@ export class RobotsController {
   @Post('data')
   async sendSensorData(@Body() sensorDataDto: SendSensorDataDto) {
     const robot = await this.robotsService.findRobotByIp(sensorDataDto.ip);
+    await this.orderService.changeLocation(robot, sensorDataDto.action);
+
     const order = await this.orderService.findOne(robot.currentOrder);
 
     if (order.status == StatusEnum.Delivery) {
       await this.orderService.addTemperature(robot.currentOrder, sensorDataDto.temperature);
+      await this.orderService.changeLocation(robot, sensorDataDto.action);
     }
     return order;
   }
