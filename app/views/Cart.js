@@ -41,6 +41,8 @@ export default function Cart({ navigation, route }) {
       destination,
       restaurant: route.params.id,
       products: data.cart
+    }).then(res => {
+      navigation.navigate('Status', {id: res.data._id});
     })
   }
 
