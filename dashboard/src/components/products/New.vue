@@ -92,12 +92,13 @@ export default {
   },
   methods: {
     save() {
-      const { name, price, description } = this.product;
+      const { name, price, description, preperationTime } = this.product;
       axios
         .post(`http://localhost:3000/restaurants/${this.restaurant}/products`, {
           name,
           price,
-          description
+          description,
+          preperationTime
         })
         .then(res => {
           this.$emit("created", res.data);
