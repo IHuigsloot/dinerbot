@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
   counter: {
     marginVertical: 'auto',
     marginRight: 5,
-    minWidth: 25
+    marginLeft: 10,
+    minWidth: 25,
   }
 })
