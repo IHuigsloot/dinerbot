@@ -8,4 +8,8 @@ export class InitRobotDto {
   @ApiProperty()
   @IsOptional()
   location: string;
+
+  @ApiProperty()
+  @IsOptional()
+  direction: number;
 }

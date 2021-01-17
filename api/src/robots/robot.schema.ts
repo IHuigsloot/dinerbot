@@ -13,6 +13,9 @@ export class Robot {
     @Prop()
     location:  string;
 
+    @Prop()
+    direction:  number;
+
     @Prop({
         default: null,
     })

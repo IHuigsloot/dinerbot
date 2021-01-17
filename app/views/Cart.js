@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View, StyleSheet } from 'react-native';
 import { useTheme, Card, List, Title, Button, Divider, TextInput } from 'react-native-paper';
 import axios from 'axios';
 
@@ -14,7 +14,7 @@ export default function Cart({ navigation, route }) {
   const { deleteItem, cart, total } = useCartContext();
   const [email, setEmail] = React.useState('');
   const [name, setName] = React.useState('');
-  const [destination, setDestination] = React.useState();
+  const [destination, setDestination] = React.useState('');
 
   React.useEffect(() => {
     const fetchMail = async () => {
@@ -41,6 +41,8 @@ export default function Cart({ navigation, route }) {
       destination,
       restaurant: route.params.id,
       products: data.cart
+    }).then(res => {
+      navigation.navigate('Status', {id: res.data._id});
     })
   }
 
@@ -48,17 +50,24 @@ export default function Cart({ navigation, route }) {
     <View>
       <Header title={route.params.title} navigation={navigation}></Header>
       <ScrollView>
-        <View style={{ marginVertical: 12 }}>
-          <Card style={{ marginHorizontal: 6 }}>
-            <Card.Title title="Winkelwagen" />
+        <View style={{ marginTop: 12, marginBottom: 68 }}>
+          <Card style={{ marginHorizontal: 6, marginBottom: 12 }}>
             <Card.Content>
+              <Title>Winkelwagen</Title>
               <List.Section>
                 {cartItems}
+                <Divider />
+                <List.Item
+                  title={<Title>Totaal</Title>}
+                  titleStyle={{marginLeft: 0}}
+                  right={()=> <Title style={{marginRight: 6}}>€{total}</Title>}
+                />
               </List.Section>
-              <Divider />
-              <Title style={{ marginTop: 10, marginBottom: 10 }}>Totaal: €{total}</Title>
-              <Divider />
-              <Title style={{ marginTop: 50, marginBottom: 10 }}>Persoonlijke gegevens</Title>
+            </Card.Content>
+          </Card>
+          <Card style={{marginHorizontal: 6}}>
+            <Card.Content>
+              <Title style={{marginBottom: 12}} >Persoonlijke gegevens</Title>
               <TextInput
                 mode="outlined"
                 label="Email"
@@ -78,11 +87,11 @@ export default function Cart({ navigation, route }) {
                 style={{ width: '100%', marginBottom: 20 }}
                 value={destination}
                 onChangeText={text => setDestination(text)} />
-              {cart.length === 0 ? (
+              {(cart.length > 0 && destination && name) ? (
+                <Button style={{ marginTop: 20 }} mode="contained" color={colors.accent} onPress={() => makeOrder({ cart: cart, destination: destination })}>Bestellen</Button>
+                ) : (
                 <Button disabled="true" style={{ marginTop: 20 }} mode="contained" color={colors.accent}>Bestellen</Button>
-              ) : (
-                  <Button style={{ marginTop: 20 }} mode="contained" color={colors.accent} onPress={() => makeOrder({ cart: cart, destination: destination })}>Bestellen</Button>
-                )}
+              )}
             </Card.Content>
           </Card>
         </View>
@@ -90,3 +99,10 @@ export default function Cart({ navigation, route }) {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  }
+})

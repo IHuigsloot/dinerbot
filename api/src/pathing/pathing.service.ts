@@ -94,34 +94,34 @@ export class PathingService {
     var currentRotation = 0;
     var actions = [];
     for (var i = 0; i < path.length; i++) {
-      console.log(path[i]);
+      // console.log(path[i]);
       if (previousMove === null) {
-        console.log('prev is null so this is the start');
+        // console.log('prev is null so this is the start');
       } else if (path[i][0] === previousMove[0]) {
-        console.log('prev is same letter');
+        // console.log('prev is same letter');
         if (
           parseInt(path[i].substring(1)) < parseInt(previousMove.substring(1))
         ) {
-          console.log('Need to go up');
+          // console.log('Need to go up');
           actions = this.calculateTurn(currentRotation, 0, actions);
           currentRotation = 0;
         } else {
-          console.log('Need to go down');
+          // console.log('Need to go down');
           actions = this.calculateTurn(currentRotation, 2, actions);
           currentRotation = 2;
         }
       } else {
-        console.log('prev is different letter');
+        // console.log('prev is different letter');
         if (
           previousMove[0] === String.fromCharCode(path[i][0].charCodeAt(0) + 1)
         ) {
-          console.log('Need to go left');
+          // console.log('Need to go left');
           actions = this.calculateTurn(currentRotation, 3, actions);
           currentRotation = 3;
         } else if (
           previousMove[0] === String.fromCharCode(path[i][0].charCodeAt(0) - 1)
         ) {
-          console.log('Need to go right');
+          // console.log('Need to go right');
           actions = this.calculateTurn(currentRotation, 1, actions);
           currentRotation = 1;
         }

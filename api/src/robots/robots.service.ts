@@ -25,8 +25,25 @@ export class RobotsService {
     private orderService: OrdersService,
   ) {}
 
-  findNearestRobot(location) {
-    return this.robotModel.findOne().exec();
+  async findNearestRobot(restaurantLocation) {
+    var nearestRobot
+    var lowestWeight
+    // TODO execute pathing and compare weight
+    const nearestRobots = await this.robotModel.find().exec()
+    for(var i = 0; i < nearestRobots.length; i++){
+      // execute findnearest paths
+      var path = this.pathingService.findShortestPath(
+        nearestRobots[i].location,
+        restaurantLocation,
+      );
+      
+      // Compare weight IF lower overwrite nearest robot
+      if (nearestRobot === undefined || lowestWeight > path.distance){
+      nearestRobot = nearestRobots[i]
+      lowestWeight = path.distance
+      }
+    }
+    return nearestRobot;
   }
 
   async getRestaurantLocation(id) {
