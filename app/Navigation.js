@@ -16,6 +16,7 @@ import useAuthReducer from './utils/authReducer';
 import CartContextProvider from './utils/cartContext';
 import Cart from './views/Cart';
 import setAuthUser from './utils/setAuthUser';
+import Status from './views/Status';
 
 const Tab = createBottomTabNavigator();
 const RestaurantStack = createStackNavigator();
@@ -38,6 +39,11 @@ function RestaurantStackScreen() {
       <RestaurantStack.Screen
         name="Winkelwagen"
         component={Cart}
+        options={{ tabBarLabel: 'Restaurant!' }}
+      />
+      <RestaurantStack.Screen
+        name="Status"
+        component={Status}
         options={{ tabBarLabel: 'Restaurant!' }}
       />
     </RestaurantStack.Navigator>

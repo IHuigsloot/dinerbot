@@ -26,28 +26,17 @@ export default function Products({ navigation, route }) {
 
   const products = data.map((product) => {
     const res = cart.find(item => item._id === product._id)
-    if (res) {
-      return (
-        <ProductCard
-          key={product._id}
-          quantity={res.quantity}
-          title={product.name}
-          subtitle={product.description}
-          price={product.price}
-          onPress={() => addItem(product)}
-        />
-      )
-    } else {
-      return (
-        <ProductCard
-          key={product._id}
-          title={product.name}
-          subtitle={product.description}
-          price={product.price}
-          onPress={() => addItem(product)}
-        />
-      )
-    }
+
+    return (
+      <ProductCard
+        key={product._id}
+        quantity={res ? res.quantity : null}
+        title={product.name}
+        subtitle={product.description}
+        price={product.price}
+        onPress={() => addItem(product)}
+      />
+    )
   })
 
   return (

@@ -14,7 +14,7 @@ export default function Cart({ navigation, route }) {
   const { deleteItem, cart, total } = useCartContext();
   const [email, setEmail] = React.useState('');
   const [name, setName] = React.useState('');
-  const [destination, setDestination] = React.useState();
+  const [destination, setDestination] = React.useState('');
 
   React.useEffect(() => {
     const fetchMail = async () => {
@@ -41,6 +41,8 @@ export default function Cart({ navigation, route }) {
       destination,
       restaurant: route.params.id,
       products: data.cart
+    }).then(res => {
+      navigation.navigate('Status', {id: res.data._id});
     })
   }
 
@@ -78,11 +80,11 @@ export default function Cart({ navigation, route }) {
                 style={{ width: '100%', marginBottom: 20 }}
                 value={destination}
                 onChangeText={text => setDestination(text)} />
-              {cart.length === 0 ? (
+              {(cart.length > 0 && destination && name) ? (
+                <Button style={{ marginTop: 20 }} mode="contained" color={colors.accent} onPress={() => makeOrder({ cart: cart, destination: destination })}>Bestellen</Button>
+                ) : (
                 <Button disabled="true" style={{ marginTop: 20 }} mode="contained" color={colors.accent}>Bestellen</Button>
-              ) : (
-                  <Button style={{ marginTop: 20 }} mode="contained" color={colors.accent} onPress={() => makeOrder({ cart: cart, destination: destination })}>Bestellen</Button>
-                )}
+              )}
             </Card.Content>
           </Card>
         </View>
