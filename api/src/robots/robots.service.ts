@@ -26,21 +26,21 @@ export class RobotsService {
   ) {}
 
   async findNearestRobot(restaurantLocation) {
-    var nearestRobot
-    var lowestWeight
+    let nearestRobot;
+    let lowestWeight;
     // TODO execute pathing and compare weight
-    const nearestRobots = await this.robotModel.find().exec()
-    for(var i = 0; i < nearestRobots.length; i++){
+    const nearestRobots = await this.robotModel.find().exec();
+    for (let i = 0; i < nearestRobots.length; i++) {
       // execute findnearest paths
-      var path = this.pathingService.findShortestPath(
+      const path = this.pathingService.findShortestPath(
         nearestRobots[i].location,
         restaurantLocation,
       );
-      
+
       // Compare weight IF lower overwrite nearest robot
-      if (nearestRobot === undefined || lowestWeight > path.distance){
-      nearestRobot = nearestRobots[i]
-      lowestWeight = path.distance
+      if (nearestRobot === undefined || lowestWeight > path.distance) {
+        nearestRobot = nearestRobots[i];
+        lowestWeight = path.distance;
       }
     }
     return nearestRobot;
@@ -117,6 +117,50 @@ export class RobotsService {
     } else {
       robot = new this.robotModel(initRobotDto);
     }
+    return robot.save();
+  }
+
+  async changeLocation(robot: RobotDocument, action: string) {
+    switch (action) {
+      case 'R':
+        if (robot.direction === 3) {
+          robot.direction = 0;
+        } else {
+          robot.direction = robot.direction + 1;
+        }
+        break;
+      case 'L':
+        if (robot.direction === 0) {
+          robot.direction = 3;
+        } else {
+          robot.direction = robot.direction - 1;
+        }
+        break;
+      case 'F':
+        // Robot drives forward check direction to change location
+        switch (robot.direction) {
+          case 0:
+            robot.location =
+              robot.location[0] + (parseInt(robot.location[1]) - 1);
+            break;
+          case 1:
+            robot.location =
+              String.fromCharCode(robot.location[0].charCodeAt(0) + 1) +
+              robot.location[1];
+            break;
+          case 2:
+            robot.location =
+              robot.location[0] + (parseInt(robot.location[1]) + 1);
+            break;
+          case 3:
+            robot.location =
+              String.fromCharCode(robot.location[0].charCodeAt(0) - 1) +
+              robot.location[1];
+            break;
+        }
+        break;
+    }
+
     return robot.save();
   }
 

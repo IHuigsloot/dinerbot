@@ -26,7 +26,8 @@ export default {
       menuItems: [
         { title: "Home", path: "/" },
         { title: "Restaurants", path: "/restaurants" },
-        { title: "Robots", path: "/robots" }
+        { title: "Robots", path: "/robots" },
+        { title: "Orders", path: "/orders" }
       ]
     };
   }

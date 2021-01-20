@@ -6,6 +6,7 @@ import { forwardRef, HttpModule, Module } from '@nestjs/common';
 import { RobotsService } from './robots.service';
 import { RobotsController } from './robots.controller';
 import { Robot, RobotSchema } from './robot.schema';
+import { EventsModule } from 'src/events/events.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { Robot, RobotSchema } from './robot.schema';
     MongooseModule.forFeature([{ name: Robot.name, schema: RobotSchema }]),
     PathingModule,
     RestaurantsModule,
+    EventsModule,
   ],
   providers: [RobotsService],
   controllers: [RobotsController],

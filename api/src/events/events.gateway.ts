@@ -1,14 +1,13 @@
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'ws';
-import { OnEvent } from '@nestjs/event-emitter';
+import { OrderUpdateEvent } from './OrderUpdateEvent';
 
-@WebSocketGateway(3030)
+@WebSocketGateway()
 export class EventsGateway {
   @WebSocketServer()
   server: Server;
 
-  @OnEvent('location.update')
-  handleLocationUpdateEvent(payload) {
+  sendLocationUpdate(payload: OrderUpdateEvent) {
     this.server.clients.forEach((client) => {
       client.send(JSON.stringify(payload));
     });

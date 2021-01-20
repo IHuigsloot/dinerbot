@@ -2,7 +2,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Expose } from 'class-transformer';
 import * as mongoose from 'mongoose';
 import { Restaurant } from 'src/restaurants/schemas/restaurant.schema';
-import { Status } from '../status';
 
 export type OrderDocument = Order & mongoose.Document;
 @Schema({

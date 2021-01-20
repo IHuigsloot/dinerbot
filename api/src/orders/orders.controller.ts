@@ -9,7 +9,6 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Api } from 'src/common/decorators/api.decorator';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrdersService } from './orders.service';
@@ -18,8 +17,7 @@ import { RestaurantsService } from 'src/restaurants/restaurants.service';
 import { UpdateOrderDto } from './dto/update-restaurant.dto';
 import { ProductsService } from 'src/restaurants/products/products.service';
 import { RobotsService } from 'src/robots/robots.service';
-import { classToPlain, Expose, plainToClass } from 'class-transformer';
-import { Product } from 'src/restaurants/products/product.schema';
+import { plainToClass } from 'class-transformer';
 import { OrderProduct } from './schemas/order.schema';
 
 @Api('orders')
@@ -27,7 +25,6 @@ import { OrderProduct } from './schemas/order.schema';
 export class OrdersController {
   constructor(
     private readonly orderService: OrdersService,
-    private eventEmitter: EventEmitter2,
     private restaurantService: RestaurantsService,
     private productsService: ProductsService,
     private robotService: RobotsService,
@@ -38,7 +35,7 @@ export class OrdersController {
     @Req() request: Request,
     @Body() createOrderDto: CreateOrderDto,
   ) {
-    const { restaurant, products, destination } = createOrderDto;
+    const { restaurant, products } = createOrderDto;
 
     await this.restaurantService.findOne(restaurant); // Validate restaurant
 
@@ -98,13 +95,18 @@ export class OrdersController {
 
   @Get()
   findAll(@Req() request: Request) {
+    if (request['user'] === 'admin') {
+      return this.orderService.findAll();
+    }
     return this.orderService.findAllForUser(request['user']);
   }
 
   @Get(':id')
   async findOne(@Req() request: Request, @Param('id') id: string) {
     const order = await this.orderService.findOne(id);
-    if (order.user !== request['user']) {
+    if (request['user'] === 'admin') {
+      return order;
+    } else if (order.user !== request['user']) {
       throw new HttpException(
         'Your not authorized to view this order',
         HttpStatus.UNAUTHORIZED,

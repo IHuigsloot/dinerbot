@@ -8,7 +8,9 @@ const routerOptions = [
   { path: "/restaurants", component: "restaurants/Index" },
   { path: "/restaurants/new", component: "restaurants/View" },
   { path: "/restaurants/:id", component: "restaurants/View" },
-  { path: "/robots", component: "Robots" }
+  { path: "/robots", component: "Robots" },
+  { path: "/orders", component: "orders/Index" },
+  { path: "/orders/:id", component: "orders/View" }
 ];
 
 const routes = routerOptions.map(route => {

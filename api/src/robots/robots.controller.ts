@@ -4,6 +4,7 @@ import { Body, Controller, forwardRef, Inject, Post } from '@nestjs/common';
 import { SendSensorDataDto } from './dto/send-sensor-data';
 import { InitRobotDto } from './dto/init-robot.dto';
 import { OrdersService } from 'src/orders/orders.service';
+import { EventsGateway } from 'src/events/events.gateway';
 
 @Controller('robots')
 export class RobotsController {
@@ -11,7 +12,8 @@ export class RobotsController {
     @Inject(forwardRef(() => OrdersService))
     private orderService: OrdersService,
     private robotsService: RobotsService,
-) {}
+    private gateway: EventsGateway,
+  ) {}
 
   @Post('me')
   initRobot(@Body() initRobotDto: InitRobotDto) {
@@ -20,15 +22,26 @@ export class RobotsController {
 
   @Post('data')
   async sendSensorData(@Body() sensorDataDto: SendSensorDataDto) {
-    const robot = await this.robotsService.findRobotByIp(sensorDataDto.ip);
-    await this.orderService.changeLocation(robot, sensorDataDto.action);
+    let robot = await this.robotsService.findRobotByIp(sensorDataDto.ip);
 
-    const order = await this.orderService.findOne(robot.currentOrder);
+    robot = await this.robotsService.changeLocation(
+      robot,
+      sensorDataDto.action,
+    );
+
+    let order = await this.orderService.findOne(robot.currentOrder);
 
     if (order.status == StatusEnum.Delivery) {
-      await this.orderService.addTemperature(robot.currentOrder, sensorDataDto.temperature);
-      await this.orderService.changeLocation(robot, sensorDataDto.action);
+      order = await this.orderService.addTemperature(
+        robot.currentOrder,
+        sensorDataDto.temperature,
+      );
     }
+
+    this.gateway.sendLocationUpdate({
+      robot,
+      order,
+    });
     return order;
   }
 }
