@@ -9,7 +9,6 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Api } from 'src/common/decorators/api.decorator';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrdersService } from './orders.service';
@@ -18,8 +17,7 @@ import { RestaurantsService } from 'src/restaurants/restaurants.service';
 import { UpdateOrderDto } from './dto/update-restaurant.dto';
 import { ProductsService } from 'src/restaurants/products/products.service';
 import { RobotsService } from 'src/robots/robots.service';
-import { classToPlain, Expose, plainToClass } from 'class-transformer';
-import { Product } from 'src/restaurants/products/product.schema';
+import { plainToClass } from 'class-transformer';
 import { OrderProduct } from './schemas/order.schema';
 
 @Api('orders')
@@ -27,7 +25,6 @@ import { OrderProduct } from './schemas/order.schema';
 export class OrdersController {
   constructor(
     private readonly orderService: OrdersService,
-    private eventEmitter: EventEmitter2,
     private restaurantService: RestaurantsService,
     private productsService: ProductsService,
     private robotService: RobotsService,
