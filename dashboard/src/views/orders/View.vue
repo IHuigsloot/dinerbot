@@ -1,8 +1,9 @@
 <template>
-  <v-container>
+  <v-container v-if="orders._id">
     <v-row>
-      <v-col cols="6">
+      <v-col cols="4">
         <v-card>
+          <v-card-title>Order informatie</v-card-title>
           <v-list-item two-line>
             <v-list-item-content>
               <v-list-item-title>Order ID:</v-list-item-title>
@@ -13,19 +14,19 @@
           </v-list-item>
           <v-list-item two-line>
             <v-list-item-content>
-              <v-list-item-title>Order name:</v-list-item-title>
+              <v-list-item-title>Naam gebruiker:</v-list-item-title>
               <v-list-item-subtitle>{{ orders.name }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
           <v-list-item two-line>
             <v-list-item-content>
-              <v-list-item-title>User:</v-list-item-title>
+              <v-list-item-title>Email gebruiker:</v-list-item-title>
               <v-list-item-subtitle>{{ orders.user }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
           <v-list-item two-line>
             <v-list-item-content>
-              <v-list-item-title>Destination:</v-list-item-title>
+              <v-list-item-title>Bestemming:</v-list-item-title>
               <v-list-item-subtitle>{{
                 orders.destination
               }}</v-list-item-subtitle>
@@ -47,7 +48,7 @@
           </v-list-item>
           <v-list-item two-line>
             <v-list-item-content>
-              <v-list-item-title>Restaurant name:</v-list-item-title>
+              <v-list-item-title>Naam restaurant:</v-list-item-title>
               <v-list-item-subtitle>{{
                 orders.restaurant.name
               }}</v-list-item-subtitle>
@@ -55,33 +56,38 @@
           </v-list-item>
           <v-list-item two-line>
             <v-list-item-content>
-              <v-list-item-title>Created at:</v-list-item-title>
+              <v-list-item-title>Aangemaakt op</v-list-item-title>
               <v-list-item-subtitle>{{
-                orders.createdAt
+                orders.createdAt | formatDate
               }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-card>
       </v-col>
-      <v-col cols="6">
-        <v-card>
-          <line-chart v-if="!!loaded" :chart-data="datacollection"></line-chart>
+      <v-col cols="8">
+        <v-card style="height: 100%">
+          <line-chart
+            style="height: 100%"
+            v-if="!!loaded"
+            :chart-data="datacollection"
+            :options="chartOptions"
+          ></line-chart>
         </v-card>
       </v-col>
     </v-row>
     <v-row>
       <v-col cols="12">
         <v-card>
-          <h2>Products:</h2>
+          <v-card-title>Producten</v-card-title>
           <template v-for="(product, index) in orders.products">
             <v-list-item class="py-4 px-8" :key="product._id" append>
-              <v-list-item-content class="ml-4">
+              <v-list-item-content>
                 <v-list-item-title class="text-h5">{{
                   product.name
                 }}</v-list-item-title>
                 <v-list-item-subtitle class="text-subtitle-2"
-                  >Quantity: {{ product.quantity }}, Price:
-                  {{ product.price }}$</v-list-item-subtitle
+                  >Hoeveelheid: {{ product.quantity }}, Prijs: €
+                  {{ product.price }}</v-list-item-subtitle
                 >
               </v-list-item-content>
             </v-list-item>
@@ -97,8 +103,8 @@
 </template>
 
 <script>
-import { debounce } from "@/helpers";
 import axios from "axios";
+import moment from "moment";
 import LineChart from "./LineChart.js";
 
 export default {
@@ -108,21 +114,30 @@ export default {
   data: function() {
     return {
       loading: false,
-      searchQuery: "",
       orders: {},
       datacollection: {},
-      loaded: false
+      loaded: false,
+      chartOptions: {
+        responsive: true,
+        maintainAspectRatio: false,
+        xAxes: [
+          {
+            type: "time",
+            distribution: "linear",
+            time: {
+              format: "HH:mm:ss",
+              displayFormats: {
+                hour: "HH:mm:ss"
+              }
+            }
+          }
+        ]
+      }
     };
   },
 
-  watch: {
-    searchQuery: debounce(function(value) {
-      this.search(value);
-    }, 250)
-  },
-
   mounted() {
-    this.search("");
+    this.search();
     this.loaded = true;
   },
 
@@ -138,14 +153,14 @@ export default {
           res => (
             (this.orders = res.data),
             (this.datacollection = {
-              labels: res.data.temperatureHistory.map(
-                a => a.timestamp.split("T")[1]
+              labels: res.data.temperatureHistory.map(a =>
+                moment(a.timestamp).format("HH:mm:ss")
               ),
               datasets: [
                 {
-                  label: "Temperature",
-                  backgroundColor: "#f87979",
-                  lineTension: 0.25,
+                  label: "Temperatuur",
+                  backgroundColor: "rgba(248, 121, 121, 0.6)",
+                  borderColor: "rgb(248, 121, 121)",
                   data: res.data.temperatureHistory.map(a => a.temperature)
                 }
               ]
@@ -167,5 +182,9 @@ export default {
   .v-icon {
     transform: translateX(10px);
   }
+}
+
+canvas {
+  box-sizing: initial;
 }
 </style>

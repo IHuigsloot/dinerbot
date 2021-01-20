@@ -19,7 +19,7 @@ export class OrdersService {
   }
 
   async findAll(): Promise<Order[]> {
-    return this.orderModel.find().exec();
+    return this.orderModel.find().sort('-createdAt').exec();
   }
 
   async findAllForUser(user): Promise<Order[]> {
@@ -27,6 +27,7 @@ export class OrdersService {
       .find({
         user: user,
       })
+      .sort('-createdAt')
       .exec();
   }
 
@@ -51,38 +52,44 @@ export class OrdersService {
 
   async changeLocation(robot: RobotDocument, action: string) {
     switch (action) {
-      case "R":
+      case 'R':
         if (robot.direction === 3) {
-          robot.direction = 0
+          robot.direction = 0;
         } else {
           robot.direction = robot.direction + 1;
         }
         break;
-      case "L":
+      case 'L':
         if (robot.direction === 0) {
-          robot.direction = 3
+          robot.direction = 3;
         } else {
           robot.direction = robot.direction - 1;
         }
         break;
-      case "F":
+      case 'F':
         // Robot drives forward check direction to change location
         switch (robot.direction) {
           case 0:
-            robot.location = robot.location[0] + (parseInt(robot.location[1]) - 1)
+            robot.location =
+              robot.location[0] + (parseInt(robot.location[1]) - 1);
             break;
           case 1:
-            robot.location = String.fromCharCode(robot.location[0].charCodeAt(0) + 1) + robot.location[1]
+            robot.location =
+              String.fromCharCode(robot.location[0].charCodeAt(0) + 1) +
+              robot.location[1];
             break;
           case 2:
-            robot.location = robot.location[0] + (parseInt(robot.location[1]) + 1)
+            robot.location =
+              robot.location[0] + (parseInt(robot.location[1]) + 1);
             break;
           case 3:
-            robot.location = String.fromCharCode(robot.location[0].charCodeAt(0) - 1) + robot.location[1]
+            robot.location =
+              String.fromCharCode(robot.location[0].charCodeAt(0) - 1) +
+              robot.location[1];
             break;
         }
         break;
-    }    
+    }
     // robot.location = "test";
     return robot.save();
   }
