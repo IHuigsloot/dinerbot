@@ -11,7 +11,7 @@ export class OrdersService {
   constructor(
     @InjectModel(Order.name)
     private orderModel: Model<OrderDocument>,
-  ) { }
+  ) {}
 
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
     const order = new this.orderModel(createOrderDto);

@@ -9,7 +9,6 @@ import { AppService } from './app.service';
 import { OrdersModule } from './orders/orders.module';
 import { UserMiddleware } from './common/middlewares/user.middleware';
 import { EventsModule } from './events/events.module';
-import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { MulterModule } from '@nestjs/platform-express';
@@ -22,7 +21,6 @@ import * as autopopulate from 'mongoose-autopopulate';
     OrdersModule,
     EventsModule,
     RestaurantsModule,
-    EventEmitterModule.forRoot(),
     MongooseModule.forRoot('mongodb://localhost/nest', {
       connectionFactory: (connection) => {
         connection.plugin(autopopulate);
