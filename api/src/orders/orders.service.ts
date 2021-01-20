@@ -82,10 +82,7 @@ export class OrdersService {
             break;
         }
         break;
-    }
-    console.log(robot.location)
-    console.log(robot.direction)
-    
+    }    
     // robot.location = "test";
     return robot.save();
   }

@@ -31,7 +31,7 @@ export class OrdersController {
     private restaurantService: RestaurantsService,
     private productsService: ProductsService,
     private robotService: RobotsService,
-  ) {}
+  ) { }
 
   @Post()
   async create(
@@ -98,13 +98,18 @@ export class OrdersController {
 
   @Get()
   findAll(@Req() request: Request) {
+    if (request['user'] === 'admin') {
+      return this.orderService.findAll();
+    }
     return this.orderService.findAllForUser(request['user']);
   }
 
   @Get(':id')
   async findOne(@Req() request: Request, @Param('id') id: string) {
     const order = await this.orderService.findOne(id);
-    if (order.user !== request['user']) {
+    if (request['user'] === 'admin') {
+      return order
+    } else if (order.user !== request['user']) {
       throw new HttpException(
         'Your not authorized to view this order',
         HttpStatus.UNAUTHORIZED,
