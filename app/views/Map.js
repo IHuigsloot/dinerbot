@@ -1,6 +1,8 @@
+// window.navigator.userAgent = "react-native";
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Image } from 'react-native';
 import { useTheme, Button } from 'react-native-paper';
+const io = require("socket.io-client");
 
 import Canvas from 'react-native-canvas';
 
@@ -15,26 +17,33 @@ export default function Map({ navigation }) {
   ])
 
   const canvasRef = useRef(null);
-  let ws
+  let socket; 
 
   useEffect(() => {
-    !ws ? ws = new WebSocket(`${environment.ws}`) : null ;
+    if (!socket) {
+      socket = io(environment.api_url);
 
-    ws.onopen = () => console.log('WebSocket Client Connected');
-    ws.onmessage = (message) => {
-      if (message.data) {
-        const res = JSON.parse(message.data);
-        console.log(res.robot.location);
-        setLocation(res.robot.location);
-      }
-    };
-    ws.onerror = (e) => {
-      // an error occurred
-      console.log(e.message);
-    };
+      socket.on("connect", () => {
+        console.log("connected");
+      });
+
+      // Error handlings
+      socket.on("error", (error) => {
+        console.log(error);
+      });
+
+      socket.on("connect_error", (error) =>
+        console.log(error)
+      );
+
+      socket.on("update", (data) => {
+        console.log(data);
+      });
+    }
+
     return () => {
       console.log('close connection');
-      ws.close();
+      socket.disconnect();
     }
   }, [])
 
