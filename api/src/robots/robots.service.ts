@@ -23,7 +23,7 @@ export class RobotsService {
     private pathingService: PathingService,
     private restaurantService: RestaurantsService,
     private orderService: OrdersService,
-  ) {}
+  ) { }
 
   async findNearestRobot(restaurantLocation) {
     let nearestRobot;
@@ -56,6 +56,10 @@ export class RobotsService {
       startLocation,
       endLocation,
     );
+    order.path.push({
+      pathToRestaurant
+    });
+    order.save();
 
     this.httpService
       .post(`http://${ipAdress}/order`, {

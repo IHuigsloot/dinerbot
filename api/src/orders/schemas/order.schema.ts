@@ -39,6 +39,10 @@ export class Order {
 
   @Prop()
   preperationTime: number;
+
+  @Prop()
+  path: any[];
+
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
