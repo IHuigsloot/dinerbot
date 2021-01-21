@@ -38,6 +38,12 @@ export class RobotsController {
       );
     }
 
+    if (order.destination === robot.location) {
+      await this.orderService.updateOne(order['id'], {
+        status: StatusEnum.Delivered,
+      });
+    }
+
     this.gateway.sendLocationUpdate({
       robot,
       order,

@@ -27,7 +27,6 @@ export class EventsGateway implements OnGatewayConnection {
   }
 
   sendLocationUpdate(payload: OrderUpdateEvent) {
-    console.log(payload);
     this.server.emit('update', payload);
   }
 }
