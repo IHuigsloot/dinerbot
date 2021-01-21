@@ -9,12 +9,10 @@ import Canvas from 'react-native-canvas';
 import Header from '../components/header';
 import { environment } from '../environment/environment';
 
-export default function Map({ navigation }) {
+export default function Map() {
   const { colors } = useTheme();
-  const [location, setLocation] = useState('')
-  const [pathList, setPathList] = useState([
-    'B8', 'C8', 'C7', 'C6', 'C5', 'C4', 'D4', 'D3', 'D2', 'E2'
-  ])
+  const [location, setLocation] = useState('A1')
+  const [pathList, setPathList] = useState(['A1']);
 
   const canvasRef = useRef(null);
   let socket; 
@@ -37,7 +35,11 @@ export default function Map({ navigation }) {
       );
 
       socket.on("update", (data) => {
-        console.log(data);
+        console.log(data.robot.location);
+        data.order.path[1] ?
+          setPathList(data.order.path[1].pathToRestaurant.path) :
+          setPathList(data.order.path[0].pathToRestaurant.path);
+        setLocation(data.robot.location);
       });
     }
 
