@@ -16,8 +16,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
 
-  app.useWebSocketAdapter(new WsAdapter(app));
-
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
