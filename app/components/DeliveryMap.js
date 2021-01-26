@@ -17,8 +17,11 @@ export default function DeliveryMap(props) {
     if (props.path) {
       setPathList(props.path);
     }
-    handleCanvas();
   }, [props])
+
+  useEffect(() => {
+    handleCanvas();
+  }, [location])
 
   const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 

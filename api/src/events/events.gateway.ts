@@ -1,7 +1,6 @@
 import {
   ConnectedSocket,
   MessageBody,
-  OnGatewayConnection,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -14,15 +13,15 @@ export class EventsGateway {
   @WebSocketServer()
   server: Server;
 
-  @SubscribeMessage('user')
+  @SubscribeMessage('order')
   setUserSocket(
-    @MessageBody() user: string,
+    @MessageBody() orderId: string,
     @ConnectedSocket() socket: Socket,
   ) {
     console.log(socket);
   }
 
-  sendLocationUpdate(payload: OrderUpdateEvent) {
+  async sendOrderUpdate(payload: OrderUpdateEvent) {
     this.server.emit('update', payload);
   }
 }

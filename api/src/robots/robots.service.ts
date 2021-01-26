@@ -23,7 +23,7 @@ export class RobotsService {
     private pathingService: PathingService,
     private restaurantService: RestaurantsService,
     private orderService: OrdersService,
-  ) { }
+  ) {}
 
   async findNearestRobot(restaurantLocation) {
     let nearestRobot;
@@ -46,6 +46,21 @@ export class RobotsService {
     return nearestRobot;
   }
 
+  async isRobotAvailable() {
+    return this.robotModel
+      .find({
+        currentOrder: null,
+      })
+      .exists()
+      .exec();
+  }
+
+  async clearOrder(orderId: string) {
+    const robot = await this.findRobotByOrder(orderId);
+    robot.currentOrder = null;
+    robot.save();
+  }
+
   async getRestaurantLocation(id) {
     const restaurant = await this.restaurantService.findOne(id);
     return restaurant.location;
@@ -57,7 +72,7 @@ export class RobotsService {
       endLocation,
     );
     order.path.push({
-      pathToRestaurant
+      pathToRestaurant,
     });
     order.save();
 
@@ -100,13 +115,17 @@ export class RobotsService {
   }
 
   async sendRobotToHome(order: Order) {
-    const robot = await this.findRobotByOrder(order['_id']);
-    return this.sendPathToRobot(
-      robot.ip,
-      order.restaurant.location,
-      order.destination,
-      order,
-    );
+    try {
+      const robot = await this.findRobotByOrder(order['_id']);
+      return this.sendPathToRobot(
+        robot.ip,
+        order.restaurant.location,
+        order.destination,
+        order,
+      );
+    } catch (error) {
+      return;
+    }
   }
 
   async initRobot(initRobotDto: InitRobotDto) {
@@ -178,13 +197,13 @@ export class RobotsService {
         .exec();
     } catch (error) {
       throw new HttpException(
-        'No robot found with the given id',
+        'No robot found with the given ip',
         HttpStatus.NOT_FOUND,
       );
     }
     if (!robot) {
       throw new HttpException(
-        'No robot found with the given id',
+        'No robot found with the given ip',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -201,13 +220,13 @@ export class RobotsService {
         .exec();
     } catch (error) {
       throw new HttpException(
-        'No robot found with the given id',
+        'No robot found with the given order',
         HttpStatus.NOT_FOUND,
       );
     }
     if (!robot) {
       throw new HttpException(
-        'No robot found with the given id',
+        'No robot found with the given order',
         HttpStatus.NOT_FOUND,
       );
     }

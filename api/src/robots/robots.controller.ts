@@ -25,14 +25,15 @@ export class RobotsController {
     let robot = await this.robotsService.findRobotByIp(sensorDataDto.ip);
     let order = await this.orderService.findOne(robot.currentOrder);
 
-    robot = await this.robotsService.changeLocation(
-      robot,
-      sensorDataDto.action,
-    );
-    this.gateway.sendLocationUpdate({
-      robot,
-      order,
-    });
+    this.robotsService
+      .changeLocation(robot, sensorDataDto.action)
+      .then((newRobot) => {
+        this.gateway.sendOrderUpdate({
+          robot: newRobot,
+          order,
+        });
+        robot = newRobot;
+      });
 
     if (order.status == StatusEnum.Delivery) {
       order = await this.orderService.addTemperature(
@@ -41,10 +42,26 @@ export class RobotsController {
       );
     }
 
-    if (order.destination === robot.location) {
-      await this.orderService.updateOne(order['_id'], {
-        status: StatusEnum.Delivered,
+    if (
+      order.status == StatusEnum.Delivery &&
+      robot.direction == 0 &&
+      order.destination === robot.location
+    ) {
+      this.gateway.sendOrderUpdate({
+        robot: robot,
+        order,
       });
+      this.orderService
+        .updateOne(order['_id'], {
+          status: StatusEnum.Delivered,
+        })
+        .then((order) => {
+          this.gateway.sendOrderUpdate({
+            robot: robot,
+            order,
+          });
+        });
+      await this.robotsService.clearOrder(order['_id']);
     }
 
     return order;
