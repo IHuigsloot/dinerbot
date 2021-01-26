@@ -10,13 +10,9 @@ import { Server, Socket } from 'socket.io';
 import { OrderUpdateEvent } from './OrderUpdateEvent';
 
 @WebSocketGateway()
-export class EventsGateway implements OnGatewayConnection {
+export class EventsGateway {
   @WebSocketServer()
   server: Server;
-
-  handleConnection(@ConnectedSocket() socket: Socket) {
-    // console.log(socket);
-  }
 
   @SubscribeMessage('user')
   setUserSocket(

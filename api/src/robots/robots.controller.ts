@@ -23,13 +23,16 @@ export class RobotsController {
   @Post('data')
   async sendSensorData(@Body() sensorDataDto: SendSensorDataDto) {
     let robot = await this.robotsService.findRobotByIp(sensorDataDto.ip);
+    let order = await this.orderService.findOne(robot.currentOrder);
 
     robot = await this.robotsService.changeLocation(
       robot,
       sensorDataDto.action,
     );
-
-    let order = await this.orderService.findOne(robot.currentOrder);
+    this.gateway.sendLocationUpdate({
+      robot,
+      order,
+    });
 
     if (order.status == StatusEnum.Delivery) {
       order = await this.orderService.addTemperature(
@@ -39,15 +42,11 @@ export class RobotsController {
     }
 
     if (order.destination === robot.location) {
-      await this.orderService.updateOne(order['id'], {
+      await this.orderService.updateOne(order['_id'], {
         status: StatusEnum.Delivered,
       });
     }
 
-    this.gateway.sendLocationUpdate({
-      robot,
-      order,
-    });
     return order;
   }
 }
