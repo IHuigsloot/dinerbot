@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { Card, Text, Title } from 'react-native-paper'
+import { Card, Text, Title, ActivityIndicator, useTheme } from 'react-native-paper'
 import axios from 'axios';
 
 import Header from '../components/header';
@@ -8,15 +8,15 @@ import { RestaurantCard } from '../components/card';
 import { environment } from '../environment/environment';
 
 export default function Restaurants({ navigation }) {
+  const {colors} = useTheme();
   const [data, setData] = useState([]);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
 
   React.useEffect(() => {
     axios.get(`${environment.api_url}/restaurants`).then(res => {
       setData(res.data);
-    }).catch(err => {
-      // Temp error handling
-      setError(err);
+      setLoading(false);
     })
   }, [])
 
@@ -37,19 +37,17 @@ export default function Restaurants({ navigation }) {
     <View>
       <Header title="Restaurants" home navigation={navigation} />
       <ScrollView>
-        {error ? (
-          // Temp error handling
-          <Card>
+        {!loading ? (
+          <View style={{ marginVertical: 12 }}>
+            {restaurants}
+          </View>
+        ) : (
+          <Card style={{marginTop: 12, marginHorizontal: 6}} >
             <Card.Content>
-              <Title>Error</Title>
-              <Text>Something went wrong.</Text>
+              <ActivityIndicator animating={true} color={colors.accent} />
             </Card.Content>
           </Card>
-        ) : (
-            <View style={{ marginVertical: 12 }}>
-              {restaurants}
-            </View>
-          )}
+        )}
       </ScrollView>
     </View>
   )

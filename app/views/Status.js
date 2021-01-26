@@ -143,7 +143,7 @@ export default function Status({ navigation, route }) {
             <>
               <Card style={{marginHorizontal: 6}} >
                 <Card.Content>
-                    <ActivityIndicator size='large' animating={true} color={colors.accent} />
+                    <ActivityIndicator animating={true} color={colors.accent} />
                 </Card.Content>
               </Card>
             </>
