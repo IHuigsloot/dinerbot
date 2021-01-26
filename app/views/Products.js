@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
-import { useTheme, Button } from 'react-native-paper';
+import { useTheme, Button, Card, ActivityIndicator } from 'react-native-paper';
 import axios from 'axios';
 
 import Header from '../components/header';
@@ -12,12 +12,13 @@ import { useCartContext } from '../utils/cartContext';
 export default function Products({ navigation, route }) {
   const { colors } = useTheme();
   const [data, setData] = useState([]);
-  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
   const { addItem, total, cart } = useCartContext();
 
   React.useEffect(() => {
     axios.get(`${environment.api_url}/restaurants/${route.params.id}/products`).then(res => {
       setData(res.data);
+      setLoading(false);
     }).catch(err => {
       // Temp error handling
       setError(err);
@@ -41,23 +42,37 @@ export default function Products({ navigation, route }) {
 
   return (
     <>
-      <Header title={route.params.title} navigation={navigation} />
-      <ScrollView>
-        <View style={styles.container}>
-          {products}
-        </View>
-      </ScrollView>
-      <View>
-        {cart.length === 0 ? (
-          <Button disabled='true' style={styles.button} icon="cart" mode="contained" color={colors.accent} >
-            Winkelwagen
-          </Button>
+      <Header title={route.params.title} navigation={navigation} clear />
+      {
+        loading ? (
+          <>
+            <Card style={{marginTop: 12, marginHorizontal: 6}} >
+              <Card.Content>
+                <ActivityIndicator animating={true} color={colors.accent} />
+              </Card.Content>
+            </Card>
+          </>
         ) : (
-            <Button style={styles.button} icon="cart" mode="contained" color={colors.accent} onPress={() => navigation.navigate('Winkelwagen', { title: route.params.title, id: route.params.id })} >
-              Winkelwagen €{total}
-            </Button>
-          )}
-      </View>
+          <>
+            <ScrollView>
+              <View style={styles.container}>
+                {products}
+              </View>
+            </ScrollView>
+            <View>
+              {cart.length === 0 ? (
+                <Button disabled='true' style={styles.button} icon="cart" mode="contained" color={colors.accent} >
+                  Winkelwagen
+                </Button>
+              ) : (
+                <Button style={styles.button} icon="cart" mode="contained" color={colors.accent} onPress={() => navigation.navigate('Winkelwagen', { title: route.params.title, id: route.params.id })} >
+                  Winkelwagen €{total}
+                </Button>
+              )}
+            </View>
+          </>
+        )
+      }
     </>
   )
 }

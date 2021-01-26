@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { useTheme, Card, Text, List, Title } from "react-native-paper";
+import { useTheme, Card, Text, List, Title, ActivityIndicator } from "react-native-paper";
 import { View, ScrollView, StyleSheet } from "react-native";
 const io = require("socket.io-client");
 
@@ -141,7 +141,11 @@ export default function Status({ navigation, route }) {
             </>
           ) : (
             <>
-              <Text>Bestelling laden</Text>
+              <Card style={{marginHorizontal: 6}} >
+                <Card.Content>
+                    <ActivityIndicator animating={true} color={colors.accent} />
+                </Card.Content>
+              </Card>
             </>
           )}
         </View>
