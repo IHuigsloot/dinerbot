@@ -42,7 +42,7 @@ export default function Products({ navigation, route }) {
 
   return (
     <>
-      <Header title={route.params.title} navigation={navigation} />
+      <Header title={route.params.title} navigation={navigation} clear />
       {
         loading ? (
           <>
