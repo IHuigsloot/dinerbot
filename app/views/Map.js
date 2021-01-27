@@ -8,7 +8,7 @@ export default function Map() {
   return (
     <View>
       <Header title="Map" home />
-      <DeliveryMap />
+      <DeliveryMap destinations />
     </View>
   )
 }
