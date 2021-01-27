@@ -10,13 +10,13 @@ import { EventsModule } from 'src/events/events.module';
 
 @Module({
   imports: [
+    MongooseModule.forFeature([{ name: Robot.name, schema: RobotSchema }]),
     forwardRef(() => OrdersModule),
+    forwardRef(() => RestaurantsModule),
     HttpModule.register({
       timeout: 8000,
     }),
-    MongooseModule.forFeature([{ name: Robot.name, schema: RobotSchema }]),
     PathingModule,
-    RestaurantsModule,
     EventsModule,
   ],
   providers: [RobotsService],

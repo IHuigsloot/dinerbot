@@ -6,6 +6,8 @@ import {
   Injectable,
   HttpException,
   HttpStatus,
+  Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { PathingService } from 'src/pathing/pathing.service';
 import { Robot, RobotDocument } from './robot.schema';
@@ -21,7 +23,9 @@ export class RobotsService {
     private robotModel: Model<RobotDocument>,
     private httpService: HttpService,
     private pathingService: PathingService,
+    @Inject(forwardRef(() => RestaurantsService))
     private restaurantService: RestaurantsService,
+    @Inject(forwardRef(() => OrdersService))
     private orderService: OrdersService,
   ) {}
 
@@ -29,7 +33,11 @@ export class RobotsService {
     let nearestRobot;
     let lowestWeight;
     // TODO execute pathing and compare weight
-    const nearestRobots = await this.robotModel.find().exec();
+    const nearestRobots = await this.robotModel
+      .find({
+        currentOrder: null,
+      })
+      .exec();
     for (let i = 0; i < nearestRobots.length; i++) {
       // execute findnearest paths
       const path = this.pathingService.findShortestPath(
@@ -47,12 +55,9 @@ export class RobotsService {
   }
 
   async isRobotAvailable() {
-    return this.robotModel
-      .find({
-        currentOrder: null,
-      })
-      .exists()
-      .exec();
+    return this.robotModel.exists({
+      currentOrder: null,
+    });
   }
 
   async clearOrder(orderId: string) {

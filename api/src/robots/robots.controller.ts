@@ -62,6 +62,7 @@ export class RobotsController {
           });
         });
       await this.robotsService.clearOrder(order['_id']);
+      this.orderService.checkForQueuedOrder();
     }
 
     return order;

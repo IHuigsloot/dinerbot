@@ -10,14 +10,14 @@ import { Product, ProductSchema } from './products/product.schema';
 
 @Module({
   imports: [
-    forwardRef(() => OrdersModule),
-    HttpModule.register({
-      timeout: 8000,
-    }),
     MongooseModule.forFeature([
       { name: Restaurant.name, schema: RestaurantSchema },
       { name: Product.name, schema: ProductSchema },
     ]),
+    forwardRef(() => OrdersModule),
+    HttpModule.register({
+      timeout: 8000,
+    }),
   ],
   controllers: [RestaurantsController, ProductsController],
   providers: [RestaurantsService, ProductsService],

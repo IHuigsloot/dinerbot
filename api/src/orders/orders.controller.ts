@@ -75,8 +75,7 @@ export class OrdersController {
 
     const order = { ...createOrderDto, user: request['user'], preperationTime };
     return this.orderService.create(order).then((orderResponse) => {
-      this.robotService.startRobot(orderResponse);
-      this.restaurantService.startOrder(orderResponse);
+      this.orderService.startOrder(orderResponse);
       return orderResponse;
     });
   }
@@ -89,6 +88,7 @@ export class OrdersController {
     const updatedOrder = await this.orderService.updateOne(id, updateOrderDto);
     if (updatedOrder.status === 'delivery') {
       this.robotService.sendRobotToHome(updatedOrder);
+      this.orderService.checkForQueuedOrder();
     }
     return updatedOrder;
   }
