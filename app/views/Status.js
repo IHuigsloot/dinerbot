@@ -86,7 +86,15 @@ export default function Status({ navigation, route }) {
         <View style={{ marginTop: 12, marginBottom: 68 }}>
           {order ? (
             <>
-              <Card style={{ marginHorizontal: 6 }}>
+              <DeliveryMap
+                location={robot?.location}
+                path={
+                  order?.path[1]
+                    ? order?.path[1].pathToRestaurant.path
+                    : order?.path[0].pathToRestaurant.path
+                }
+              />
+              <Card style={{ marginTop: 12, marginHorizontal: 6 }}>
                 <Card.Content>
                   <List.Section>
                     <List.Item
@@ -130,14 +138,6 @@ export default function Status({ navigation, route }) {
                   </List.Section>
                 </Card.Content>
               </Card>
-              <DeliveryMap
-                location={robot?.location}
-                path={
-                  order?.path[1]
-                    ? order?.path[1].pathToRestaurant.path
-                    : order?.path[0].pathToRestaurant.path
-                }
-              />
             </>
           ) : (
             <>
