@@ -120,8 +120,21 @@ export default {
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                min: 15,
+                max: 35
+              }
+            }
+          ]
+        },
         xAxes: [
           {
+            ticks: {
+              min: 0
+            },
             type: "time",
             distribution: "linear",
             time: {

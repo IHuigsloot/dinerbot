@@ -11,7 +11,7 @@ import { getItem } from '../utils/storage';
 
 export default function Cart({ navigation, route }) {
   const { colors } = useTheme();
-  const { deleteItem, cart, total } = useCartContext();
+  const { deleteItem, cart, total, clearCart } = useCartContext();
   const [email, setEmail] = React.useState('');
   const [name, setName] = React.useState('');
   const [destination, setDestination] = React.useState('');
@@ -42,6 +42,7 @@ export default function Cart({ navigation, route }) {
       restaurant: route.params.id,
       products: data.cart
     }).then(res => {
+      clearCart();
       navigation.navigate('Status', {id: res.data._id});
     })
   }

@@ -22,6 +22,8 @@ export class EventsGateway {
   }
 
   async sendOrderUpdate(payload: OrderUpdateEvent) {
-    this.server.emit('update', payload);
+    const orderId = payload.order['_id'];
+    this.server.to(orderId).emit('update', payload);
+    // this.server.emit('update', payload);
   }
 }

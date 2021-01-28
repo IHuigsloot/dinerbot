@@ -34,8 +34,10 @@ export default function Status({ navigation, route }) {
       socket.on("connect_error", (error) => console.log(error));
 
       socket.on("update", (data) => {
-        setOrder(data.order);
-        setRobot(data.robot);
+        if (data.order._id === route.params.id) {
+          setOrder(data.order);
+          setRobot(data.robot);
+        }
       });
     }
 
@@ -81,7 +83,7 @@ export default function Status({ navigation, route }) {
 
   return (
     <View>
-      <Header title="Status" navigation={navigation} />
+      <Header title="Status" navigation={navigation} goToHome />
       <ScrollView>
         <View style={{ marginTop: 12, marginBottom: 68 }}>
           {order ? (

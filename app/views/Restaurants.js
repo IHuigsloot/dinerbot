@@ -6,12 +6,13 @@ import axios from 'axios';
 import Header from '../components/header';
 import { RestaurantCard } from '../components/card';
 import { environment } from '../environment/environment';
+import { useCartContext } from '../utils/cartContext';
 
 export default function Restaurants({ navigation }) {
   const {colors} = useTheme();
   const [data, setData] = useState([]);
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const { clearCart, cart } = useCartContext();
 
   React.useEffect(() => {
     axios.get(`${environment.api_url}/restaurants`).then(res => {
