@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
-import { useTheme, Card, List, Title, Button, Divider, TextInput } from 'react-native-paper';
+import { useTheme, Card, List, Title, Button, Divider, TextInput, HelperText } from 'react-native-paper';
 import axios from 'axios';
 
 import { useCartContext } from '../utils/cartContext';
@@ -15,6 +15,8 @@ export default function Cart({ navigation, route }) {
   const [email, setEmail] = React.useState('');
   const [name, setName] = React.useState('');
   const [destination, setDestination] = React.useState('');
+
+  const validDestinations = ['C5', 'B8', 'C9', 'C2', 'E2', 'E6', 'H4', 'H3', 'I6', 'D9', 'F9', 'H10'];
 
   React.useEffect(() => {
     const fetchMail = async () => {
@@ -43,7 +45,7 @@ export default function Cart({ navigation, route }) {
       products: data.cart
     }).then(res => {
       clearCart();
-      navigation.navigate('Status', {id: res.data._id});
+      navigation.navigate('Status', { id: res.data._id });
     })
   }
 
@@ -60,15 +62,15 @@ export default function Cart({ navigation, route }) {
                 <Divider />
                 <List.Item
                   title={<Title>Totaal</Title>}
-                  titleStyle={{marginLeft: 0}}
-                  right={()=> <Title style={{marginRight: 6}}>€{total}</Title>}
+                  titleStyle={{ marginLeft: 0 }}
+                  right={() => <Title style={{ marginRight: 6 }}>€{total}</Title>}
                 />
               </List.Section>
             </Card.Content>
           </Card>
-          <Card style={{marginHorizontal: 6}}>
+          <Card style={{ marginHorizontal: 6 }}>
             <Card.Content>
-              <Title style={{marginBottom: 12}} >Persoonlijke gegevens</Title>
+              <Title style={{ marginBottom: 12 }} >Persoonlijke gegevens</Title>
               <TextInput
                 mode="outlined"
                 label="Email"
@@ -85,14 +87,15 @@ export default function Cart({ navigation, route }) {
               <TextInput
                 mode="outlined"
                 label="Bestemming"
-                style={{ width: '100%', marginBottom: 20 }}
+                style={{ width: '100%' }}
                 value={destination}
                 onChangeText={text => setDestination(text)} />
-              {(cart.length > 0 && destination && name) ? (
+              <HelperText style={{paddingLeft: 5}} >Voer een beschikbare bestemming in, te vinden in het tabblad van de map rechtsonderin</HelperText>
+              {(cart.length > 0 && validDestinations.includes(destination) && name) ? (
                 <Button style={{ marginTop: 20 }} mode="contained" color={colors.accent} onPress={() => makeOrder({ cart: cart, destination: destination })}>Bestellen</Button>
-                ) : (
-                <Button disabled="true" style={{ marginTop: 20 }} mode="contained" color={colors.accent}>Bestellen</Button>
-              )}
+              ) : (
+                  <Button disabled="true" style={{ marginTop: 20 }} mode="contained" color={colors.accent}>Bestellen</Button>
+                )}
             </Card.Content>
           </Card>
         </View>
