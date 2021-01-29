@@ -169,7 +169,7 @@ export class RobotsService {
         switch (robot.direction) {
           case 0:
             robot.location =
-              robot.location[0] + (parseInt(robot.location[1]) - 1);
+              robot.location[0] + (parseInt(robot.location.substring(1)) - 1);
             break;
           case 1:
             robot.location =
@@ -178,7 +178,7 @@ export class RobotsService {
             break;
           case 2:
             robot.location =
-              robot.location[0] + (parseInt(robot.location[1]) + 1);
+              robot.location[0] + (parseInt(robot.location.substring(1)) + 1);
             break;
           case 3:
             robot.location =
